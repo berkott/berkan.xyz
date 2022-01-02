@@ -11,7 +11,7 @@ title                    : "Berkan"
 title_separator          : "-"
 name                     : &name "Berkan"
 description              : &description "Student at Columbia University looking to improve the wellbeing of sentient beings"
-url                      : https://academicpages.github.io # the base hostname & protocol for your site e.g. "https://mmistakes.github.io" TODO: change this before deploy 
+url                      : https://berkan.xyz # the base hostname & protocol for your site e.g. "https://mmistakes.github.io" TODO: change this before deploy 
 baseurl                  : "" # the subpath of your site, e.g. "/blog"
 repository               : "berkott/berkan.xyz"
 teaser                   :  # filename of teaser fallback teaser image placed in /images/, .e.g. "500x300.png"

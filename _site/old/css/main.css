@@ -1,0 +1,13 @@
+body {
+    font-family: "Ubuntu", sans-serif;
+    color: #ffffff;
+}
+h1 {
+	font-size: 8vh;
+}
+p {
+	font-size: 3vh;
+}
+.section {
+	text-align: center;
+}
