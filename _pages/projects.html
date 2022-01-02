@@ -1,0 +1,14 @@
+---
+layout: archive
+title: "Projects"
+permalink: /projects/
+author_profile: true
+---
+
+{% include base_path %}
+
+<p>These are, in my opinion, my most interesting projects, you can find everything on my <a href="https://github.com/berkott">GitHub</a>.</p>
+
+{% for post in site.projects reversed %}
+  {% include archive-single-project.html %}
+{% endfor %}

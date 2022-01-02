@@ -1,0 +1,468 @@
+
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+
+<meta charset="utf-8">
+
+
+
+<!-- begin SEO -->
+
+
+
+
+
+
+
+
+
+<title>Few-Shot Learning - Why, How, and the Future - Berkan</title>
+
+
+
+
+
+
+
+<meta property="og:locale" content="en-US">
+<meta property="og:site_name" content="Berkan">
+<meta property="og:title" content="Few-Shot Learning - Why, How, and the Future">
+
+
+  <link rel="canonical" href="http://localhost:4000/posts/2021/08/fewShotBasics/">
+  <meta property="og:url" content="http://localhost:4000/posts/2021/08/fewShotBasics/">
+
+
+
+  <meta property="og:description" content="Brief introduction and overview of few-shot learning. Discusses why few-shot learning is cool, common approaches to few-shot learning, and the potential impact it could have in the future.">
+
+
+
+
+
+  
+
+  
+
+
+
+
+
+  <meta property="og:type" content="article">
+  <meta property="article:published_time" content="2021-08-24T00:00:00-07:00">
+
+
+
+
+
+
+
+
+  <script type="application/ld+json">
+    {
+      "@context" : "http://schema.org",
+      "@type" : "Person",
+      "name" : "Berkan",
+      "url" : "http://localhost:4000",
+      "sameAs" : null
+    }
+  </script>
+
+
+
+
+
+
+<!-- end SEO -->
+
+
+<link href="http://localhost:4000/feed.xml" type="application/atom+xml" rel="alternate" title="Berkan Feed">
+
+<!-- http://t.co/dKP3o1e -->
+<meta name="HandheldFriendly" content="True">
+<meta name="MobileOptimized" content="320">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<script>
+  document.documentElement.className = document.documentElement.className.replace(/\bno-js\b/g, '') + ' js ';
+</script>
+
+<!-- For all browsers -->
+<link rel="stylesheet" href="http://localhost:4000/assets/css/main.css">
+
+<meta http-equiv="cleartype" content="on">
+    
+
+<!-- start custom head snippets -->
+
+<link rel="apple-touch-icon" sizes="57x57" href="http://localhost:4000/images/apple-touch-icon-57x57.png?v=M44lzPylqQ">
+<link rel="apple-touch-icon" sizes="60x60" href="http://localhost:4000/images/apple-touch-icon-60x60.png?v=M44lzPylqQ">
+<link rel="apple-touch-icon" sizes="72x72" href="http://localhost:4000/images/apple-touch-icon-72x72.png?v=M44lzPylqQ">
+<link rel="apple-touch-icon" sizes="76x76" href="http://localhost:4000/images/apple-touch-icon-76x76.png?v=M44lzPylqQ">
+<link rel="apple-touch-icon" sizes="114x114" href="http://localhost:4000/images/apple-touch-icon-114x114.png?v=M44lzPylqQ">
+<link rel="apple-touch-icon" sizes="120x120" href="http://localhost:4000/images/apple-touch-icon-120x120.png?v=M44lzPylqQ">
+<link rel="apple-touch-icon" sizes="144x144" href="http://localhost:4000/images/apple-touch-icon-144x144.png?v=M44lzPylqQ">
+<link rel="apple-touch-icon" sizes="152x152" href="http://localhost:4000/images/apple-touch-icon-152x152.png?v=M44lzPylqQ">
+<link rel="apple-touch-icon" sizes="180x180" href="http://localhost:4000/images/apple-touch-icon-180x180.png?v=M44lzPylqQ">
+<link rel="icon" type="image/png" href="http://localhost:4000/images/favicon-32x32.png?v=M44lzPylqQ" sizes="32x32">
+<link rel="icon" type="image/png" href="http://localhost:4000/images/android-chrome-192x192.png?v=M44lzPylqQ" sizes="192x192">
+<link rel="icon" type="image/png" href="http://localhost:4000/images/favicon-96x96.png?v=M44lzPylqQ" sizes="96x96">
+<link rel="icon" type="image/png" href="http://localhost:4000/images/favicon-16x16.png?v=M44lzPylqQ" sizes="16x16">
+<link rel="manifest" href="http://localhost:4000/images/manifest.json?v=M44lzPylqQ">
+<link rel="mask-icon" href="http://localhost:4000/images/safari-pinned-tab.svg?v=M44lzPylqQ" color="#000000">
+<link rel="shortcut icon" href="/images/favicon.ico?v=M44lzPylqQ">
+<meta name="msapplication-TileColor" content="#000000">
+<meta name="msapplication-TileImage" content="http://localhost:4000/images/mstile-144x144.png?v=M44lzPylqQ">
+<meta name="msapplication-config" content="http://localhost:4000/images/browserconfig.xml?v=M44lzPylqQ">
+<meta name="theme-color" content="#ffffff">
+<link rel="stylesheet" href="http://localhost:4000/assets/css/academicons.css"/>
+
+<script type="text/x-mathjax-config"> MathJax.Hub.Config({ TeX: { equationNumbers: { autoNumber: "all" } } }); </script>
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    tex2jax: {
+      inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+      processEscapes: true
+    }
+  });
+</script>
+<script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/latest.js?config=TeX-MML-AM_CHTML' async></script>
+
+<!-- end custom head snippets -->
+
+  </head>
+
+  <body>
+
+    <!--[if lt IE 9]>
+<div class="notice--danger align-center" style="margin: 0;">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</div>
+<![endif]-->
+    
+
+<div class="masthead">
+  <div class="masthead__inner-wrap">
+    <div class="masthead__menu">
+      <nav id="site-nav" class="greedy-nav">
+        <button><div class="navicon"></div></button>
+        <ul class="visible-links">
+          <li class="masthead__menu-item masthead__menu-item--lg"><a href="http://localhost:4000/">Berkan</a></li>
+          
+            
+            <li class="masthead__menu-item"><a href="http://localhost:4000/posts/">Blog</a></li>
+          
+            
+            <li class="masthead__menu-item"><a href="http://localhost:4000/resources/">Resources</a></li>
+          
+            
+            <li class="masthead__menu-item"><a href="http://localhost:4000/projects/">Projects</a></li>
+          
+            
+            <li class="masthead__menu-item"><a href="http://localhost:4000/files/cv.pdf">CV</a></li>
+          
+        </ul>
+        <ul class="hidden-links hidden"></ul>
+      </nav>
+    </div>
+  </div>
+</div>
+
+    
+
+
+
+
+
+<div id="main" role="main">
+  
+
+
+  <div class="sidebar sticky">
+  
+
+
+
+<div itemscope itemtype="http://schema.org/Person">
+
+  <div class="author__avatar">
+    
+    	<img src="http://localhost:4000/images/pfp.jpg" class="author__avatar" alt="Berkan">
+    
+  </div>
+
+  <div class="author__content">
+    <h3 class="author__name">Berkan</h3>
+    <p class="author__bio">Student at Columbia University</p>
+  </div>
+
+  <div class="author__urls-wrapper">
+    <button class="btn btn--inverse">Follow</button>
+    <ul class="author__urls social-icons">
+      
+        <li><i class="fa fa-fw fa-map-marker" aria-hidden="true"></i> New York City</li>
+      
+      
+      
+      
+        <li><a href="mailto:berkan.ottlik [at] columbia [dot] edu"><i class="fas fa-fw fa-envelope" aria-hidden="true"></i> Email</a></li>
+      
+      
+       
+      
+        <li><a href="https://twitter.com/berkott3"><i class="fab fa-fw fa-twitter-square" aria-hidden="true"></i> Twitter</a></li>
+      
+      
+      
+      
+        <li><a href="https://www.linkedin.com/in/berkan-ottlik-252872178/"><i class="fab fa-fw fa-linkedin" aria-hidden="true"></i> LinkedIn</a></li>
+      
+      
+      
+      
+      
+      
+        <li><a href="https://github.com/berkott"><i class="fab fa-fw fa-github" aria-hidden="true"></i> Github</a></li>
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+    </ul>
+  </div>
+</div>
+
+  
+  </div>
+
+
+  <article class="page" itemscope itemtype="http://schema.org/CreativeWork">
+    <meta itemprop="headline" content="Few-Shot Learning - Why, How, and the Future">
+    <meta itemprop="description" content="Brief introduction and overview of few-shot learning. Discusses why few-shot learning is cool, common approaches to few-shot learning, and the potential impact it could have in the future.">
+    <meta itemprop="datePublished" content="August 24, 2021">
+    
+
+    <div class="page__inner-wrap">
+      
+        <header>
+          <h1 class="page__title" itemprop="headline">Few-Shot Learning - Why, How, and the Future
+</h1>
+          
+            <p class="page__meta"><i class="fa fa-clock-o" aria-hidden="true"></i> 
+
+
+  
+	  7 minute read
+	
+</p>
+          
+        
+        
+        
+          <p class="page__date"><strong><i class="fa fa-fw fa-calendar" aria-hidden="true"></i> Published:</strong> <time datetime="2021-08-24T00:00:00-07:00">August 24, 2021</time></p>
+        
+        
+             
+        
+    
+        </header>
+      
+
+      <section class="page__content" itemprop="text">
+        <p><em>I wrote this article for the Columbia Undergraduate Science Journal (CUSJ) and simply copy pasted it here. Click <a href="https://journals.library.columbia.edu/index.php/cusj/blog/view/366">here</a> to see it on the CUSJ website</em></p>
+
+<p>Imagine using Face-ID to unlock your phone, but having to take thousands of images of yourself in various environments, for your phone to finally recognize your face [1]. If it weren’t for few-shot learning (FSL), this would be the case. A typical modern deep neural network for object detection, trained on the state-of-the-art ImageNet dataset, might require several hundred thousand images of oboes, trumpets, and flutes to detect them, and then another several hundred thousand to detect trombones [2]. On the other hand, even children are able to differentiate between trumpets and trombones after only seeing a few examples. FSL aims to create models that can make accurate predictions after only seeing a very small training dataset [1]. However, this doesn’t mean that the models can make accurate predictions out of thin air. The models somehow need to get useful additional information.</p>
+
+<p>Researchers have identified three main approaches to FSL to get that additional information: the data, model, and algorithm approach [3]. The data approach in some way involves increasing the size of the training data for the FSL model. This can be done by translating, flipping, or modifying image samples in some other way [4] to generate more data, transforming samples from similar data sets [5], and more. By essentially increasing the data set, this approach to FSL can leverage more traditional deep neural networks that excel at making accurate predictions from large data sets. For example, if you want to classify apples, oranges, and bananas, but you only have a picture of each, you can slightly rotate training images, flip them horizontally, and crop them. All of these images are still fundamentally bananas. A traditional classifier can use these additional training examples to then make better predictions..</p>
+
+<p>The second approach, the model approach, uses insights from learned representations. Embedding learning for FSL is an example of the model approach, as a learned embedding function can embed samples into a lower-dimensional space where a simpler model that doesn’t require as much data can be used for classification [6]. One of the most popular deep learning models today (and biggest with 175 billion parameters), GPT-3 is also in this category [7]. GPT-3 is fundamentally a language model, meaning that given a prompt, it is able to predict what comes next in a text. It utilizes a new architecture called transformers [8], to learn incredibly useful data representations that it effectively leverages during test time.</p>
+
+<p>The third approach, the algorithm approach, mainly involves learning how to learn, or meta-learning. In meta-learning, there are two learning algorithms at play: a meta-learner and the regular learner. The meta-learner usually learns to create the learner to perform optimally on a task [9]. In a way, it’s similar to how parents may learn to become better parents as they have multiple children over the years, and therefore each successive child is hopefully more successful (it works better for meta-learning algorithms than for humans). This approach may be hard to understand, but it has produced some of the most exciting results in recent years [10].</p>
+
+<p>Already, FSL models have incredible real world applications for low-data drug discovery [12], voice cloning from short audio snippets [13], and other domains where there is little labeled training data. AI pioneer Geoffrey Hinton said, “I do believe deep learning is going to be able to do everything, but I do think there’s going to have to be quite a few conceptual breakthroughs” [11]. As FSL models become better and better at learning from small data sets, similar to humans, they have the potential to lead us to one of these incredible “conceptual breakthroughs”. Who knows where few-shot learning could take us in fifty years.</p>
+
+<p><strong>References:</strong></p>
+<ul>
+  <li>Ozsubasi, W. (2020, November 1). Few-Shot Learning (FSL): What it is &amp; its Applications. Retrieved July 16, 2021, from https://research.aimultiple.com/few-shot-learning/</li>
+  <li>ILSVRC2017. (n.d.). Retrieved July 16, 2021, from https://image-net.org/challenges/LSVRC/2017/browse-det-synsets.php</li>
+  <li>Wang, Y., Yao, Q., Kwok, J., &amp; Ni, L. M. (2020). Generalizing from a few examples: A survey on few-shot learning. ArXiv:1904.05046 [Cs]. http://arxiv.org/abs/1904.05046</li>
+  <li>Shyam, P., Gupta, S., &amp; Dukkipati, A. (2017). Attentive recurrent comparators. ArXiv:1703.00767 [Cs]. http://arxiv.org/abs/1703.00767</li>
+  <li>Tsai, Y.-H. H., &amp; Salakhutdinov, R. (2018). Improving one-shot learning through fusing side information. ArXiv:1710.08347 [Cs]. http://arxiv.org/abs/1710.08347</li>
+  <li>Jia, Y., Shelhamer, E., Donahue, J., Karayev, S., Long, J., Girshick, R., Guadarrama, S., &amp; Darrell, T. (2014). Caffe: Convolutional architecture for fast feature embedding. ArXiv:1408.5093 [Cs]. http://arxiv.org/abs/1408.5093</li>
+  <li>Brown, T. B., Mann, B., Ryder, N., Subbiah, M., Kaplan, J., Dhariwal, P., Neelakantan, A., Shyam, P., Sastry, G., Askell, A., Agarwal, S., Herbert-Voss, A., Krueger, G., Henighan, T., Child, R., Ramesh, A., Ziegler, D. M., Wu, J., Winter, C., … Amodei, D. (2020). Language models are few-shot learners. ArXiv:2005.14165 [Cs]. http://arxiv.org/abs/2005.14165</li>
+  <li>Vaswani, A., Shazeer, N., Parmar, N., Uszkoreit, J., Jones, L., Gomez, A. N., Kaiser, L., &amp; Polosukhin, I. (2017). Attention is all you need. ArXiv:1706.03762 [Cs]. http://arxiv.org/abs/1706.03762</li>
+  <li>Hospedales, T., Antoniou, A., Micaelli, P., &amp; Storkey, A. (2020). Meta-learning in neural networks: A survey. ArXiv:2004.05439 [Cs, Stat]. http://arxiv.org/abs/2004.05439</li>
+  <li>Finn, C., Abbeel, P., &amp; Levine, S. (2017). Model-agnostic meta-learning for fast adaptation of deep networks. ArXiv:1703.03400 [Cs]. http://arxiv.org/abs/1703.03400</li>
+  <li>Hao, K. (2020, November 3). AI pioneer Geoff Hinton: “Deep learning is going to be able to do everything.” Retrieved July 16, 2021, from https://www.technologyreview.com/2020/11/03/1011616/ai-godfather-geoffrey-hinton-deep-learning-will-do-everything/</li>
+  <li>Altae-Tran, H., Ramsundar, B., Pappu, A. S., &amp; Pande, V. (2017). Low data drug discovery with one-shot learning. ACS Central Science, 3(4), 283–293. https://doi.org/10.1021/acscentsci.6b00367</li>
+  <li>Arik, S. O., Chen, J., Peng, K., Ping, W., &amp; Zhou, Y. (2018). Neural voice cloning with a few samples. ArXiv:1802.06006 [Cs, Eess]. http://arxiv.org/abs/1802.06006</li>
+</ul>
+
+        
+      </section>
+
+      <footer class="page__meta">
+        
+        
+
+
+  
+
+
+
+
+  
+  
+  
+
+  <p class="page__taxonomy">
+    <strong><i class="fa fa-fw fa-tags" aria-hidden="true"></i> Tags: </strong>
+    <span itemprop="keywords">
+    
+      
+      
+      <a href="http://localhost:4000/tags/#artificial-intelligence" class="page__taxonomy-item" rel="tag">Artificial Intelligence</a>
+    
+    </span>
+  </p>
+
+
+
+
+      </footer>
+
+      
+
+<section class="page__share">
+  
+    <h4 class="page__share-title">Share on</h4>
+  
+
+  <a href="https://twitter.com/intent/tweet?text=http://localhost:4000/posts/2021/08/fewShotBasics/" class="btn btn--twitter" title="Share on Twitter"><i class="fab fa-twitter" aria-hidden="true"></i><span> Twitter</span></a>
+
+  <a href="https://www.facebook.com/sharer/sharer.php?u=http://localhost:4000/posts/2021/08/fewShotBasics/" class="btn btn--facebook" title="Share on Facebook"><i class="fab fa-facebook" aria-hidden="true"></i><span> Facebook</span></a>
+
+  <a href="https://www.linkedin.com/shareArticle?mini=true&url=http://localhost:4000/posts/2021/08/fewShotBasics/" class="btn btn--linkedin" title="Share on LinkedIn"><i class="fab fa-linkedin" aria-hidden="true"></i><span> LinkedIn</span></a>
+</section>
+
+      
+
+
+  <nav class="pagination">
+    
+      <a href="#" class="pagination--pager disabled">Previous</a>
+    
+    
+      <a href="http://localhost:4000/posts/2021/12/gradCAM/" class="pagination--pager" title="Grad-CAM and Basic CNN Interpretability
+">Next</a>
+    
+  </nav>
+
+    </div>
+
+    
+  </article>
+
+  
+  
+    <div class="page__related">
+      
+        <h4 class="page__related-title">You May Also Enjoy</h4>
+      
+      <div class="grid__wrapper">
+        
+          
+
+
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="http://schema.org/CreativeWork">
+    
+
+    <h2 class="archive__item-title" itemprop="headline">
+      
+        <a href="http://localhost:4000/posts/2021/12/gradCAM/" rel="permalink">Grad-CAM and Basic CNN Interpretability
+</a>
+      
+    </h2>
+    
+    
+      <p class="page__meta"><i class="fa fa-clock-o" aria-hidden="true"></i> 
+
+
+  
+	  14 minute read
+	
+</p>
+    
+
+        
+         <p class="page__date"><strong><i class="fa fa-fw fa-calendar" aria-hidden="true"></i> Published:</strong> <time datetime="2021-12-01T00:00:00-08:00">December 01, 2021</time></p>
+        
+
+    
+    <p class="archive__item-excerpt" itemprop="description"><p>Explanation of the basics of CNN interpretability, how CAM works, and how Grad-CAM works!</p>
+</p>
+    
+    
+    
+
+  </article>
+</div>
+
+        
+      </div>
+    </div>
+  
+</div>
+
+
+    <div class="page__footer">
+      <footer>
+        
+
+<!-- <div class="page__footer-follow">
+  <ul class="social-icons">
+    
+      <li><strong>Follow:</strong></li>
+    
+    
+    
+    
+      <li><a href="http://github.com/berkott"><i class="fab fa-github" aria-hidden="true"></i> GitHub</a></li>
+    
+    
+    <li><a href="http://localhost:4000/feed.xml"><i class="fa fa-fw fa-rss-square" aria-hidden="true"></i> Feed</a></li>
+  </ul>
+</div> -->
+
+<div class="page__footer-copyright">&copy; 2022 Berkan. Powered by <a href="http://jekyllrb.com" rel="nofollow">Jekyll</a> &amp; <a href="https://github.com/academicpages/academicpages.github.io">AcademicPages</a>, a fork of <a href="https://mademistakes.com/work/minimal-mistakes-jekyll-theme/" rel="nofollow">Minimal Mistakes</a>.</div>
+
+      </footer>
+    </div>
+
+    <script src="http://localhost:4000/assets/js/main.min.js"></script>
+
+
+
+
+
+  </body>
+</html>
+

@@ -1,0 +1,55 @@
+{% include base_path %}
+
+{% if post.header.teaser %}
+  {% capture teaser %}{{ post.header.teaser }}{% endcapture %}
+{% else %}
+  {% assign teaser = site.teaser %}
+{% endif %}
+
+{% if post.id %}
+  {% assign title = post.title | markdownify | remove: "<p>" | remove: "</p>" %}
+{% else %}
+  {% assign title = post.title %}
+{% endif %}
+
+<div class="{{ include.type | default: "list" }}__item">
+  <article class="archive__item" itemscope itemtype="http://schema.org/CreativeWork">
+    {% if post.image-src %}
+      <div style="display: grid; grid-template-columns: 6em 1fr; gap: 1em;">
+        <div style="display: flex; align-items: center;">
+          <img src="{{ post.image-src }}" alt="Project Picture" style="border-radius: 0.5em;">
+          <!-- <img src="{{ post.image-src }}" alt="Project Picture" style="margin: 1em 1em 1em 0em; "> -->
+        </div>
+        <div>
+          <h2 class="archive__item-title" itemprop="headline">
+            {% if post.link %}
+              <a href="{{ post.link }}">{{ title }}</a>
+            {% else %}
+              <a href="{{ base_path }}" rel="permalink">{{ title }}</a>
+            {% endif %}
+          </h2>
+      
+          {% if post.date %}
+            <p class="page__date"><strong>Created:</strong> <time datetime="{{ post.date | default: "1900-01-01" | date_to_xmlschema }}">{{ post.date | default: "1900-01-01" | date: "%B %d, %Y" }}</time></p>
+          {% endif %}
+        </div>
+      </div>
+    {% else %}
+      <h2 class="archive__item-title" itemprop="headline">
+        {% if post.link %}
+          <a href="{{ post.link }}">{{ title }}</a>
+        {% else %}
+          <a href="{{ base_path }}" rel="permalink">{{ title }}</a>
+        {% endif %}
+      </h2>
+
+      {% if post.date %}
+        <p class="page__date"><strong>Created:</strong> <time datetime="{{ post.date | default: "1900-01-01" | date_to_xmlschema }}">{{ post.date | default: "1900-01-01" | date: "%B %d, %Y" }}</time></p>
+      {% endif %}
+    {% endif %}
+    
+    {% if post.excerpt %}
+      <p itemprop="description" style="margin-top: 0px">{{ post.excerpt | markdownify | remove: "<p>" | remove: "</p>"  }}</p>
+    {% endif %}
+  </article>
+</div>
