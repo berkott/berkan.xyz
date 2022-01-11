@@ -1,0 +1,676 @@
+
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+
+<meta charset="utf-8">
+
+
+
+<!-- begin SEO -->
+
+
+
+
+
+
+
+
+
+<title>Understanding Transformers Part 1: Attention Mechanisms - Berkan</title>
+
+
+
+
+
+
+
+<meta property="og:locale" content="en-US">
+<meta property="og:site_name" content="Berkan">
+<meta property="og:title" content="Understanding Transformers Part 1: Attention Mechanisms">
+
+
+  <link rel="canonical" href="http://localhost:4000/posts/2013/08/transformersPart1/">
+  <meta property="og:url" content="http://localhost:4000/posts/2013/08/transformersPart1/">
+
+
+
+  <meta property="og:description" content="Part one in a series of posts about understanding transformers. This post focuses on attention mechanisms.">
+
+
+
+
+
+  
+
+  
+
+
+
+
+
+  <meta property="og:type" content="article">
+  <meta property="article:published_time" content="2022-01-10T00:00:00-08:00">
+
+
+
+
+
+
+
+
+  <script type="application/ld+json">
+    {
+      "@context" : "http://schema.org",
+      "@type" : "Person",
+      "name" : "Berkan",
+      "url" : "http://localhost:4000",
+      "sameAs" : null
+    }
+  </script>
+
+
+
+
+
+
+<!-- end SEO -->
+
+
+<link href="http://localhost:4000/feed.xml" type="application/atom+xml" rel="alternate" title="Berkan Feed">
+
+<!-- http://t.co/dKP3o1e -->
+<meta name="HandheldFriendly" content="True">
+<meta name="MobileOptimized" content="320">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<script>
+  document.documentElement.className = document.documentElement.className.replace(/\bno-js\b/g, '') + ' js ';
+</script>
+
+<!-- For all browsers -->
+<link rel="stylesheet" href="http://localhost:4000/assets/css/main.css">
+
+<meta http-equiv="cleartype" content="on">
+    
+
+<!-- start custom head snippets -->
+
+<link rel="apple-touch-icon" sizes="57x57" href="http://localhost:4000/images/apple-touch-icon-57x57.png?v=M44lzPylqQ">
+<link rel="apple-touch-icon" sizes="60x60" href="http://localhost:4000/images/apple-touch-icon-60x60.png?v=M44lzPylqQ">
+<link rel="apple-touch-icon" sizes="72x72" href="http://localhost:4000/images/apple-touch-icon-72x72.png?v=M44lzPylqQ">
+<link rel="apple-touch-icon" sizes="76x76" href="http://localhost:4000/images/apple-touch-icon-76x76.png?v=M44lzPylqQ">
+<link rel="apple-touch-icon" sizes="114x114" href="http://localhost:4000/images/apple-touch-icon-114x114.png?v=M44lzPylqQ">
+<link rel="apple-touch-icon" sizes="120x120" href="http://localhost:4000/images/apple-touch-icon-120x120.png?v=M44lzPylqQ">
+<link rel="apple-touch-icon" sizes="144x144" href="http://localhost:4000/images/apple-touch-icon-144x144.png?v=M44lzPylqQ">
+<link rel="apple-touch-icon" sizes="152x152" href="http://localhost:4000/images/apple-touch-icon-152x152.png?v=M44lzPylqQ">
+<link rel="apple-touch-icon" sizes="180x180" href="http://localhost:4000/images/apple-touch-icon-180x180.png?v=M44lzPylqQ">
+<link rel="icon" type="image/png" href="http://localhost:4000/images/favicon-32x32.png?v=M44lzPylqQ" sizes="32x32">
+<link rel="icon" type="image/png" href="http://localhost:4000/images/android-chrome-192x192.png?v=M44lzPylqQ" sizes="192x192">
+<link rel="icon" type="image/png" href="http://localhost:4000/images/favicon-96x96.png?v=M44lzPylqQ" sizes="96x96">
+<link rel="icon" type="image/png" href="http://localhost:4000/images/favicon-16x16.png?v=M44lzPylqQ" sizes="16x16">
+<link rel="manifest" href="http://localhost:4000/images/manifest.json?v=M44lzPylqQ">
+<link rel="mask-icon" href="http://localhost:4000/images/safari-pinned-tab.svg?v=M44lzPylqQ" color="#000000">
+<link rel="shortcut icon" href="/images/favicon.ico?v=M44lzPylqQ">
+<meta name="msapplication-TileColor" content="#000000">
+<meta name="msapplication-TileImage" content="http://localhost:4000/images/mstile-144x144.png?v=M44lzPylqQ">
+<meta name="msapplication-config" content="http://localhost:4000/images/browserconfig.xml?v=M44lzPylqQ">
+<meta name="theme-color" content="#ffffff">
+<link rel="stylesheet" href="http://localhost:4000/assets/css/academicons.css"/>
+
+<script type="text/x-mathjax-config"> MathJax.Hub.Config({ TeX: { equationNumbers: { autoNumber: "all" } } }); </script>
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    tex2jax: {
+      inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+      processEscapes: true
+    }
+  });
+</script>
+<script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/latest.js?config=TeX-MML-AM_CHTML' async></script>
+
+<!-- end custom head snippets -->
+
+  </head>
+
+  <body>
+
+    <!--[if lt IE 9]>
+<div class="notice--danger align-center" style="margin: 0;">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</div>
+<![endif]-->
+    
+
+<div class="masthead">
+  <div class="masthead__inner-wrap">
+    <div class="masthead__menu">
+      <nav id="site-nav" class="greedy-nav">
+        <button><div class="navicon"></div></button>
+        <ul class="visible-links">
+          <li class="masthead__menu-item masthead__menu-item--lg"><a href="http://localhost:4000/">Berkan</a></li>
+          
+            
+            <li class="masthead__menu-item"><a href="http://localhost:4000/posts/">Blog</a></li>
+          
+            
+            <li class="masthead__menu-item"><a href="http://localhost:4000/resources/">Resources</a></li>
+          
+            
+            <li class="masthead__menu-item"><a href="http://localhost:4000/projects/">Projects</a></li>
+          
+        </ul>
+        <ul class="hidden-links hidden"></ul>
+      </nav>
+    </div>
+  </div>
+</div>
+
+    
+
+
+
+
+
+<div id="main" role="main">
+  
+
+
+  <div class="sidebar sticky">
+  
+
+
+
+<div itemscope itemtype="http://schema.org/Person">
+
+  <div class="author__avatar">
+    
+    	<img src="http://localhost:4000/images/pfp.png" class="author__avatar" alt="Berkan">
+    
+  </div>
+
+  <div class="author__content">
+    <h3 class="author__name">Berkan</h3>
+    <p class="author__bio">Student at Columbia University</p>
+  </div>
+
+  <div class="author__urls-wrapper">
+    <button class="btn btn--inverse">Follow</button>
+    <ul class="author__urls social-icons">
+      
+        <li><i class="fa fa-fw fa-map-marker" aria-hidden="true"></i> New York City</li>
+      
+      
+      
+      
+        <li><a href="mailto:berkan.ottlik [at] columbia [dot] edu"><i class="fas fa-fw fa-envelope" aria-hidden="true"></i> Email</a></li>
+      
+      
+       
+      
+        <li><a href="https://twitter.com/berkott3"><i class="fab fa-fw fa-twitter-square" aria-hidden="true"></i> Twitter</a></li>
+      
+      
+      
+      
+        <li><a href="https://www.linkedin.com/in/berkan-ottlik-252872178/"><i class="fab fa-fw fa-linkedin" aria-hidden="true"></i> LinkedIn</a></li>
+      
+      
+      
+      
+      
+      
+        <li><a href="https://github.com/berkott"><i class="fab fa-fw fa-github" aria-hidden="true"></i> Github</a></li>
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+    </ul>
+  </div>
+</div>
+
+  
+  </div>
+
+
+  <article class="page" itemscope itemtype="http://schema.org/CreativeWork">
+    <meta itemprop="headline" content="Understanding Transformers Part 1: Attention Mechanisms">
+    <meta itemprop="description" content="Part one in a series of posts about understanding transformers. This post focuses on attention mechanisms.">
+    <meta itemprop="datePublished" content="January 10, 2022">
+    
+
+    <div class="page__inner-wrap">
+      
+        <header>
+          <h1 class="page__title" itemprop="headline">Understanding Transformers Part 1: Attention Mechanisms
+</h1>
+          
+            <p class="page__meta"><i class="fa fa-clock-o" aria-hidden="true"></i> 
+
+
+  
+	  17 minute read
+	
+</p>
+          
+        
+        
+        
+          <p class="page__date"><strong><i class="fa fa-fw fa-calendar" aria-hidden="true"></i> Published:</strong> <time datetime="2022-01-10T00:00:00-08:00">January 10, 2022</time></p>
+        
+        
+             
+        
+    
+        </header>
+      
+
+      <section class="page__content" itemprop="text">
+        <p><em><strong>WARNING:</strong> This post assumes you have a basic understanding of neural networks and specifically Recurrent Neural Networks (RNNs).</em></p>
+
+<p>There are sometimes things in my life, that I’ve heard about many times, but never totally understood. Transformers are one of those things. That’s why, in this series of posts, I’m going to finally get a better understanding of transformers, and I invite you to come along this journey with me. I’m going to start with the building blocks of transformers, namely attention mechanisms. I’m going to base most of this post on the paper <a href="https://arxiv.org/pdf/1409.0473.pdf">Neural Machine Translation by Jointly Learning to Align and Translate</a>, which first introduced attention mechanisms in 2014 (the year Germany won the world cup 😃⚽️).</p>
+
+<p>I have not yet implemented this paper, but I found this <a href="https://github.com/bentrevett/pytorch-seq2seq/blob/master/3%20-%20Neural%20Machine%20Translation%20by%20Jointly%20Learning%20to%20Align%20and%20Translate.ipynb">good implementation</a> online. However, I might come back to this post and add my own implementation 🙃.</p>
+
+<h1 id="neural-machine-translation">Neural Machine Translation</h1>
+
+<p>Neural machine translation aims to take an input sentence comprised of the input words \(\mathbf{x} = (x_1, \ldots, x_{T_x})\) and translate it into an output sentence \(\mathbf{y} = (y_1, \ldots, y_{T_y})\) in a different language, where  using only a single (<em>They say single in the paper but technically their model comprises of multiple neural networks as you will soon. I guess sometimes these things are just a little vague, but I think you get the idea</em>), pretty large, neural network. I’m now going to introduce a recurring translation example used in the paper.</p>
+
+<p><strong>English Input Sentence:</strong></p>
+<blockquote>
+  <p>An admitting privilege is the right of a doctor to admit a patient to a hospital or a medical centre to carry out a diagnosis or a procedure, based on his status as a health care worker at a hospital.</p>
+</blockquote>
+
+<p><strong>A Reference Translation:</strong></p>
+<blockquote>
+  <p>Le privilege d’admission est le droit d’un medecin, en vertu de son statut de membre soignant d’un hopital, d’admettre un patient dans un hopital ou un centre medical afin d’y delivrer un ´diagnostic ou un traitement.</p>
+</blockquote>
+
+<p><em>Warning:</em> The accents on top of some of the letters have disappeared during the copy/paste.</p>
+
+<p>Now I don’t know French. So I’m just going to trust some of the authors analysis on the accuracy of their model’s translations. But it would be useful, if I were maybe implementing this myself or just to rapidly test, for there to be a way to automatically gauge how good a generated translation is. Luckily, there is something for this, called the <a href="https://aclanthology.org/P02-1040.pdf">BLEU Score</a>!</p>
+
+<h2 id="bleu-score">BLEU Score</h2>
+
+<p>The <a href="https://aclanthology.org/P02-1040.pdf">paper</a> does a really good job of explaining how they derived the BLEU score, I’m just going to give a brief overview.</p>
+
+<p>The core assumption that the BLEU (BiLingual Evaluation Understudy) score paper makes, is that the closer a machine translation is to a professional human translation, the better it is. So really all the BLEU score does is measure the <strong>closeness</strong> of a machine translation to one or more reference human translations.</p>
+
+<p>Essentially, BLEU tries to compare \(n \text{-} gram\) (basically just sequences of \(n\) characters) in the machine translation to the reference translations. There is also an added brevity penalty to avoid translations that are just really short. The equations below are for scoring texts with multiple sentences.</p>
+
+\[BLEU = BP \cdot \exp \left ( \sum_{n=1}^N w_n \log{p_n} \right )\]
+
+<p>Where:</p>
+
+\[BP = \begin{cases} 
+    1 &amp; \text{if } c &gt; r \\
+    e^{1-r/c} &amp; \text{if }  c \le r 
+  \end{cases}\]
+
+<ul>
+  <li>\(c\) represents the length of the candidate translation.</li>
+  <li>\(r\) represents the effective corpus length, and is calculated by summing the best match lengths (best match length is just the closest reference sentence length, so if the candidate translation for a sentence has 12 words and there are references with 10 and 13 words, the best match length would be 13) for each candidate sentence in the corpus.</li>
+</ul>
+
+\[w_n = \frac{1}{N}\]
+
+<ul>
+  <li>\(N\) is usually around 4</li>
+</ul>
+
+<!-- $$ p_n = \frac{\displaystyle \sum_{C \in \{Candidates\}} \sum_{n \text{-} gram \in {C}} Count_{clip} (n \text{-} gram)}{\displaystyle \sum_{C' \in \{Candidates\}} \sum_{n \text{-} gram' \in {C'}} Count (n \text{-} gram')} $$ -->
+
+\[p_n = \displaystyle \sum_{C \in \{Candidates\}} \sum_{n \text{-} gram \in {C}} \frac{Count_{clip} (n \text{-} gram)}{Count (n \text{-} gram)}\]
+
+<ul>
+  <li>\(C\) represents a sentence in \(Candidates\), which contains all the sentences in the translation. Now there is a technicality here, when I say \(C\) is “a sentence”, what I really mean is \(C\) is the translation of a sentence and could technically be multiple sentences.</li>
+</ul>
+
+\[Count_{clip} = \min(Count, Max \_ Ref \_ Count)\]
+
+<ul>
+  <li>\(Max \_ Ref \_ Count\) is the maximum number of times an \(n \text{-} gram\) is seen in a single reference translation.</li>
+  <li>\(Count\) is just the number of times an \(n \text{-} gram\) is seen in the candidate translation.</li>
+</ul>
+
+<p>Ok, I know I just threw a lot of math at you and you might be a bit confused. Basically, we are going over different values of \(n\) from 1 to about 4, and (in the case where we are using our simple, uniform, definition for \(w_n\)) taking the average of the number of those \(n \text{-} grams\) are seen in the candidate translation and the reference translations, over the number of those \(n \text{-} grams\) in the candidate translation. Finally, we have this brevity penalty that penalizes translations that are very short. Overal this outputs a number from 0 to 1, and the higher the number is the more it is like the reference translations. This is a bit of an over simplification, but this is the basic idea, so if none of the math made sense and you just understood this, you should be ok for now.</p>
+
+<p>Now that we have some background on neural machine translation and the BLEU score, we are ready to tackle attention! We will start by understanding previous approaches to neural machine translation, and then see how the attention mechanism makes it better.</p>
+
+<h1 id="previous-approach">Previous Approach</h1>
+
+<p>The previous approach mentioned in the paper is called RNN Encoder-Decoder, and was proposed by <a href="https://arxiv.org/pdf/1406.1078.pdf">Cho et al.</a> and <a href="https://arxiv.org/pdf/1409.3215.pdf">Sutskever et al.</a>.</p>
+
+<h2 id="encoder">Encoder</h2>
+
+<p>Essentially, this model works by first having an encoder that reads in the input sentence \(\mathbf{x}\) and outputs a fixed-length vector \(c\) called the context vector (more on this later). This can be done as follows:</p>
+
+\[h_t = f(x_t, h_{t-1})\]
+
+\[c = q(\{h_1, \ldots , h_{T_x} \})\]
+
+<p>The paper describes how the previous approaches used an LSTM as \(f\) and \(h_{T_x} = q(\{h_1, \ldots , h_{T_x} \})\). Hopefully, you can see how this makes sense given your background RNN understanding. It’s pretty much a many to one RNN, where we are just reading in the sentence word by word and outputting the hidden state after the final word is read in to the decoder.</p>
+
+<h2 id="decoder">Decoder</h2>
+
+<p>The decoder aims to predict the next word \(y_{t'}\) given the context vector \(c\) and the previously predicted words \(\{y_1, \ldots, y_{t'-1} \}\). The decoder basically defines a probability over a translation \(\mathbf{y}\) that goes as follows, decomposing the joint probability into ordered conditional:</p>
+
+\[p(\mathbf{y}) = \prod_{t=1}^{T} p(y_t | \{ y_1 \ldots, y_{t-1}\}, c)\]
+
+<p>RNNs allow us to model each conditional probability as:</p>
+
+\[p(y_t | \{ y_1 \ldots, y_{t-1}\}, c) = g(y_{t-1}, s_t, c)\]
+
+<p>where \(g\) is an RNN (GRU, LSTM, whatever) and \(s_t\) represents the hidden state. This is just a one to many RNN that takes an input context vector \(c\) and outputs a translation \(\mathbf{y}\).</p>
+
+<h2 id="issues">Issues</h2>
+
+<p>The biggest problem that the authors mention with this model is the fact that it uses a fixed length context vector \(c\). This forces the model to squash all the information from the input sentence, into a set length vector. The problem is this sentence can be of different lengths. The attention mechanism that is proposed in this paper frees the mode from this fixed length context vector \(c\) and is shown to achieve much better performance on longer sentences.</p>
+
+<h1 id="new-model">New Model</h1>
+
+<p>The new mechanism that they claim learns to align and translate uses the attention mechanism and looks as follows:</p>
+
+<p><img src="/images/transformers1/attentionMechanism.png" alt="Attention Mechanism" title="Attention Mechanism" /></p>
+
+<h2 id="decoder-1">Decoder</h2>
+
+<p>Instead of defining each conditional probability as in Eq. 9, we can define them as follows:</p>
+
+\[p(y_i | \{ y_1 \ldots, y_{i-1}\}, \mathbf{x}) = g(y_{i-1}, s_i, c_i)\]
+
+<p>\(g\) is just some RNN model again.</p>
+
+\[s_i = f(s_{i-1}, y_{i-1}, c_i)\]
+
+<p>\(s_i\) is just the hidden state at time \(i\).</p>
+
+<p><em>Note how the \(c\) term now has a subscript!</em> This is because the context vector \(c_i\) term now depends on a sequence of annotations \((h_1, \ldots, h_{T_x})\) which the encoder creates. \(c_i\) is a weighted sum of these annotations.</p>
+
+\[c_i = \sum_{j=1}^{T_x} \alpha_{ij} h_j\]
+
+\[\alpha_{ij} = \frac{\exp(e_{ij})}{\sum_{k=1}^{T_x} \exp(e_{ik})} = \sigma(e_{i})_j\]
+
+<p>Where \(\sigma\) is just the softmax function, and:</p>
+
+\[e_{ij} = a(s_{i-1}, h_j)\]
+
+<p>\(a\) is an alignment model which scores how well inputs around position j in the candidate sentence and the output translation at i match. Here \(a\) is just a feedforward neural network that is trained jointly with everything else.</p>
+
+<p>While this may all look scary at first, all that’s really going on is that we are using \(c_i\) for the \(i\)th output word instead of \(c\). And we are calculating \(c_i\) as a weighted sum of these weird annotations \(h\) that the encoder creates. \(h_j\) contains information about the whole input sentence with a focus on the parts surrounding the \(j\)th word.</p>
+
+<p><strong>Pay attention to the attention mechanism here 😉!!</strong> These weights \(\alpha_{ij}\) tell the model what parts of the sentence to pay attention to when predicting the \(i\)th word. The alignment model figures out what parts of the sentence to pay attention to based on the previous hidden state \(s_{i-1}\).</p>
+
+<p>The cool thing is this is kind of similar to what we people do as well. If I had to translate a short sentence from English to German (I don’t know French but I do know German), I could just read the entire sentence (encoder), store it in my brain (context vector \(c\)), and then say it in German (decoder). But if I had to translate a longer sentence, I would first try to translate the beginning of the English sentence, and pay attention to the words over there. I wouldn’t care about the words at the end of the sentence to translate the ones at the beginning.</p>
+
+<h2 id="encoder-1">Encoder</h2>
+
+<p>The encoder is responsible for creating these annotations \((h_1, \ldots, h_{T_x})\) and does so using a <a href="https://ieeexplore.ieee.org/document/650093">bidirectional RNN</a> (BiRNN). The reason a regular RNN is not used is because a regular RNN only has information about the previous words, which wouldn’t allow annotations to have context that comes later in the sentence that could be important to the meaning of the current part of the sentence.</p>
+
+<p>The BiRNN consists of a forward and backward RNNs that read the sentences in regular and reverse order respectively and calculate the hidden states \((\overrightarrow{h_1}, \ldots, \overrightarrow{h_{T_x}})\) and \((\overleftarrow{h_1}, \ldots, \overleftarrow{h_{T_x}})\) respectively. These are concatenated s.t. the hidden state \(h_j\) corresponding to word \(x_j\) is \(\left [ \overrightarrow{h_j^T} ; \overleftarrow{h_j^T} \right ]\). This way \(h_j\) contains context from before and after in the sentence, mainly focused near the \(j\)th word because of RNNs tendency to represent recent inputs better.</p>
+
+<h1 id="performance">Performance</h1>
+
+<p>The authors of the paper trained 4 different models: RNNencdec30, RNNencdec50, RNNsearch30, and RNNsearch50, where RNNencdec is the previous model and RNNsearch is the new attention based model, and the number at the end represents the longest sentence size seen in the training data. The graph below shows the BLEU scores for these different models on different test sentence lengths. Please note how the BLEU score is greater than 1 here, it was just multiplied by 100.</p>
+
+<p><img src="/images/transformers1/attentionMechanismPerformance.png" alt="Attention Mechanism Performance" title="Attention Mechanism Performance" /></p>
+
+<p>The impressive thing here is that the performance for the attention based model has better performance across all sentence lengths. It is intuitively to be expected that it performs better for longer sentences given that the model avoids the fixed-length context vector \(c\), but the fact that it performs better across the board is really impressive.</p>
+
+<p>Going back to our previous example from the start of the post we can see how RNNencdec-50 fails at longer sentences:</p>
+
+<p><strong>English Input Sentence:</strong></p>
+<blockquote>
+  <p>An admitting privilege is the right of a doctor to admit a patient to a hospital or a medical centre to carry out a diagnosis or a procedure, based on his status as a health care worker at a hospital.</p>
+</blockquote>
+
+<p><strong>RNNencdec-50:</strong></p>
+<blockquote>
+  <p>Un privilege d’admission est le droit d’un medecin de reconnaitre un patient a l’hopital ou un centre medical d’un diagnostic ou de prendre un diagnostic en
+fonction de son etat de sante.</p>
+</blockquote>
+
+<p><strong>RNNencdec-50 Translated Back Using Google Translate:</strong></p>
+<blockquote>
+  <p>An admitting privilege is the right of a physician to recognize a patient at hospital or medical center for a diagnosis or to take a diagnosis by depending on his state of health.</p>
+</blockquote>
+
+<p>This translation is clearly not right at the end. But the RNNsearch-50 translation on the other hand…</p>
+
+<p><strong>RNNsearch-50:</strong></p>
+<blockquote>
+  <p>Un privilege d’admission est le droit d’un medecin d’admettre un patient a un hopital ou un centre medical pour effectuer un diagnostic ou une procedure, selon son statut de travailleur des soins de sante a l’hopital.</p>
+</blockquote>
+
+<p><strong>RNNsearch-50 Translated Back Using Google Translate:</strong></p>
+<blockquote>
+  <p>An admitting privilege is the right of a physician to admit a patient to an hospital or medical center to perform a diagnosis or procedure, depending on his status as a health care worker at the hospital.</p>
+</blockquote>
+
+<p>Impressive huh?</p>
+
+<p>The paper also shows these plots showing the \(\alpha_{ij}\) of the \(j\)th source word for the \(i\)th target word. You can see how the model learned to pay attention to things that are intuitive for people as well. “Destruction” and “La destruction” go together but “Syria” isn’t important for that translation.</p>
+
+<p><img src="/images/transformers1/attentionMechanismAlignments.png" alt="Attention Mechanism Alignments" title="Attention Mechanism Alignments" /></p>
+
+<h1 id="conclusion">Conclusion</h1>
+
+<p>I think attention is really cool. The clever way the alignment model is tied into the RNNs and that it actually works to create much better translations is really impressive. Also the way it’s at least somewhat more biologically plausible is also exciting (this is a fun topic). The next post will continue to lay the groundwork for transformers. Stay tuned 😎.</p>
+
+<h1 id="references">References:</h1>
+<ul>
+  <li><a href="https://arxiv.org/pdf/1409.0473.pdf">Neural Machine Translation by Jointly Learning to Align and Translate</a></li>
+  <li><a href="https://aclanthology.org/P02-1040.pdf">BLEU Score</a></li>
+  <li><a href="https://github.com/bentrevett/pytorch-seq2seq/blob/master/3%20-%20Neural%20Machine%20Translation%20by%20Jointly%20Learning%20to%20Align%20and%20Translate.ipynb">Someone Else’s Implementation</a></li>
+</ul>
+
+        
+      </section>
+
+      <footer class="page__meta">
+        
+        
+
+
+  
+
+
+
+
+  
+  
+  
+
+  <p class="page__taxonomy">
+    <strong><i class="fa fa-fw fa-tags" aria-hidden="true"></i> Tags: </strong>
+    <span itemprop="keywords">
+    
+      
+      
+      <a href="http://localhost:4000/tags/#artificial-intelligence" class="page__taxonomy-item" rel="tag">Artificial Intelligence</a>
+    
+    </span>
+  </p>
+
+
+
+
+      </footer>
+
+      
+
+<section class="page__share">
+  
+    <h4 class="page__share-title">Share on</h4>
+  
+
+  <a href="https://twitter.com/intent/tweet?text=http://localhost:4000/posts/2013/08/transformersPart1/" class="btn btn--twitter" title="Share on Twitter"><i class="fab fa-twitter" aria-hidden="true"></i><span> Twitter</span></a>
+
+  <a href="https://www.facebook.com/sharer/sharer.php?u=http://localhost:4000/posts/2013/08/transformersPart1/" class="btn btn--facebook" title="Share on Facebook"><i class="fab fa-facebook" aria-hidden="true"></i><span> Facebook</span></a>
+
+  <a href="https://www.linkedin.com/shareArticle?mini=true&url=http://localhost:4000/posts/2013/08/transformersPart1/" class="btn btn--linkedin" title="Share on LinkedIn"><i class="fab fa-linkedin" aria-hidden="true"></i><span> LinkedIn</span></a>
+</section>
+
+      
+
+
+  <nav class="pagination">
+    
+      <a href="http://localhost:4000/posts/2021/12/gradCAM/" class="pagination--pager" title="Grad-CAM and Basic CNN Interpretability (with Implementation!)
+">Previous</a>
+    
+    
+      <a href="#" class="pagination--pager disabled">Next</a>
+    
+  </nav>
+
+    </div>
+
+    
+  </article>
+
+  
+  
+    <div class="page__related">
+      
+        <h4 class="page__related-title">You May Also Enjoy</h4>
+      
+      <div class="grid__wrapper">
+        
+          
+
+
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="http://schema.org/CreativeWork">
+    
+
+    <h2 class="archive__item-title" itemprop="headline">
+      
+        <a href="http://localhost:4000/posts/2021/12/gradCAM/" rel="permalink">Grad-CAM and Basic CNN Interpretability (with Implementation!)
+</a>
+      
+    </h2>
+    
+    
+      <p class="page__meta"><i class="fa fa-clock-o" aria-hidden="true"></i> 
+
+
+  
+	  24 minute read
+	
+</p>
+    
+
+        
+         <p class="page__date"><strong><i class="fa fa-fw fa-calendar" aria-hidden="true"></i> Published:</strong> <time datetime="2021-12-30T00:00:00-08:00">December 30, 2021</time></p>
+        
+
+    
+    <p class="archive__item-excerpt" itemprop="description"><p>Explanation of the basics of CNN interpretability, how CAM works, and how Grad-CAM works! Even comes with an implementation in PyTorch.</p>
+</p>
+    
+    
+    
+
+  </article>
+</div>
+
+        
+          
+
+
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="http://schema.org/CreativeWork">
+    
+
+    <h2 class="archive__item-title" itemprop="headline">
+      
+        <a href="http://localhost:4000/posts/2021/08/fewShotBasics/" rel="permalink">Few-Shot Learning - Why, How, and the Future
+</a>
+      
+    </h2>
+    
+    
+      <p class="page__meta"><i class="fa fa-clock-o" aria-hidden="true"></i> 
+
+
+  
+	  7 minute read
+	
+</p>
+    
+
+        
+         <p class="page__date"><strong><i class="fa fa-fw fa-calendar" aria-hidden="true"></i> Published:</strong> <time datetime="2021-08-24T00:00:00-07:00">August 24, 2021</time></p>
+        
+
+    
+    <p class="archive__item-excerpt" itemprop="description"><p>Brief introduction and overview of few-shot learning. Discusses why few-shot learning is cool, common approaches to few-shot learning, and the potential impact it could have in the future.</p>
+</p>
+    
+    
+    
+
+  </article>
+</div>
+
+        
+      </div>
+    </div>
+  
+</div>
+
+
+    <div class="page__footer">
+      <footer>
+        
+
+<!-- <div class="page__footer-follow">
+  <ul class="social-icons">
+    
+      <li><strong>Follow:</strong></li>
+    
+    
+    
+    
+      <li><a href="http://github.com/berkott"><i class="fab fa-github" aria-hidden="true"></i> GitHub</a></li>
+    
+    
+    <li><a href="http://localhost:4000/feed.xml"><i class="fa fa-fw fa-rss-square" aria-hidden="true"></i> Feed</a></li>
+  </ul>
+</div> -->
+
+<div class="page__footer-copyright">&copy; 2022 Berkan. Powered by <a href="http://jekyllrb.com" rel="nofollow">Jekyll</a> &amp; <a href="https://github.com/academicpages/academicpages.github.io">AcademicPages</a>, a fork of <a href="https://mademistakes.com/work/minimal-mistakes-jekyll-theme/" rel="nofollow">Minimal Mistakes</a>.</div>
+
+      </footer>
+    </div>
+
+    <script src="http://localhost:4000/assets/js/main.min.js"></script>
+
+
+
+
+
+  </body>
+</html>
+

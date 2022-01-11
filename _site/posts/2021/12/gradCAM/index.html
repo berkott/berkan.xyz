@@ -52,7 +52,7 @@
 
 
   <meta property="og:type" content="article">
-  <meta property="article:published_time" content="2021-12-01T00:00:00-08:00">
+  <meta property="article:published_time" content="2021-12-30T00:00:00-08:00">
 
 
 
@@ -250,7 +250,7 @@
   <article class="page" itemscope itemtype="http://schema.org/CreativeWork">
     <meta itemprop="headline" content="Grad-CAM and Basic CNN Interpretability (with Implementation!)">
     <meta itemprop="description" content="Explanation of the basics of CNN interpretability, how CAM works, and how Grad-CAM works! Even comes with an implementation in PyTorch.">
-    <meta itemprop="datePublished" content="December 01, 2021">
+    <meta itemprop="datePublished" content="December 30, 2021">
     
 
     <div class="page__inner-wrap">
@@ -270,7 +270,7 @@
         
         
         
-          <p class="page__date"><strong><i class="fa fa-fw fa-calendar" aria-hidden="true"></i> Published:</strong> <time datetime="2021-12-01T00:00:00-08:00">December 01, 2021</time></p>
+          <p class="page__date"><strong><i class="fa fa-fw fa-calendar" aria-hidden="true"></i> Published:</strong> <time datetime="2021-12-30T00:00:00-08:00">December 30, 2021</time></p>
         
         
              
@@ -288,7 +288,7 @@
 
 <p>My implementation in PyTorch on the MNIST dataset is in a jupyter notebook and can be found in html form <a href="https://berkan.xyz/files/gradCAM.html">here</a>. The GitHub repo can be found <a href="https://github.com/berkott/cnn-interpretation-pytorch">here</a>. I will show some of the result images and code here.</p>
 
-<h2 id="very-basics-of-interpretability">Very Basics of Interpretability</h2>
+<h1 id="very-basics-of-interpretability">Very Basics of Interpretability</h1>
 
 <p>Simply put, interpretability matters. And it matters for a variety of reasons. You could look at it from the perspective of AI Safety, if we have more intepretable models, perhaps we can find <a href="https://www.alignmentforum.org/posts/CzZ6Fch4JSpwCpu6C/interpretability">unknown safety problems</a> in our models that can prevent doom. This is something I may explore more in a future blog post :)</p>
 
@@ -305,7 +305,7 @@
 
 <p>Now we are ready to dig in. However, before talking about Grad-CAM we will discuss <a href="https://arxiv.org/pdf/1512.04150.pdf">CAM</a>.</p>
 
-<h2 id="class-activation-mappings-cam">Class Activation Mappings (CAM)</h2>
+<h1 id="class-activation-mappings-cam">Class Activation Mappings (CAM)</h1>
 
 <p>CAM aims to create class-discriminative localization maps that essentially show what the CNN looks at when making a certain classification. These heatmaps look like this:</p>
 
@@ -319,7 +319,7 @@
 
 <p>However, before describing the rest of CAM, I first want to explain <a href="https://alexisbcook.github.io/2017/global-average-pooling-layers-for-object-localization/">Global Average Pooling (GAP)</a>.</p>
 
-<h3 id="global-average-pooling">Global Average Pooling</h3>
+<h2 id="global-average-pooling">Global Average Pooling</h2>
 
 <p>When GAP is used, it is typically applied to the output of the final convolutional layer. It collapses the \(h \times w \times d\) output down to a \(1 \times 1 \times d\) vector. One slightly weird thing is that in the CAM paper they don’t actually take the average of each of the \(d\) feature maps that come from the final convolutional layer, they just take the sum of all.  <em><strong>Notation alert:</strong> I’m going to use notation that is more consistent with the Grad-CAM paper.</em></p>
 
@@ -373,7 +373,7 @@
     <span class="k">return</span> <span class="n">y</span><span class="p">,</span> <span class="n">x</span>
 </code></pre></div></div>
 
-<h3 id="back-to-cam">Back to CAM</h3>
+<h2 id="back-to-cam">Back to CAM</h2>
 
 <p>Now we can come back to CAM. CAM requires a sort of specific architecture to work. It requires the network consists of convolutional layers (these can have any sort of pooling, dropout, residual blocks etc.), then a GAP layer, and finally an output layer.</p>
 
@@ -411,11 +411,11 @@
   <span class="n">sum_res</span> <span class="o">=</span> <span class="n">torch</span><span class="p">.</span><span class="nb">sum</span><span class="p">(</span><span class="n">mult_res</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
 </code></pre></div></div>
 
-<h3 id="gap-vs-gmp">GAP vs GMP</h3>
+<h2 id="gap-vs-gmp">GAP vs GMP</h2>
 
 <p>A question that might come up is, why GAP and why not Global Max Pooling (GMP). In the paper, they cite emiprical evidence that says that GAP and GMP have similar classification performance, but GAP has better localization performance. Also intuitive reasoning says that GAP will encourage the network to identify the extent of an object while GMP encourages it to find one disciminative feature.</p>
 
-<h3 id="uses">Uses</h3>
+<h2 id="uses">Uses</h2>
 
 <p>CAM is already pretty useful! It can lend insights into failure modes (such as this <a href="https://www.jefftk.com/p/detecting-tanks">famous US Army story</a> that may or may not be true). Another thing is that it can be used as a weakly supervised model (as opposed to a strongly supervised model given bounding boxes during training time) for object localiation. The idea is that you basically draw bounding boxes around the CAM visualizations per class to get your localization. It actually performed decently well (see paper for more details).</p>
 
@@ -441,11 +441,11 @@
 
 <p>If you drew a good bounding box around the redder regions of the image, you would localize the 7 pretty well. Another cool thing you can see here is that the model doesn’t seem to value what happens around the middle of the slanted line in the 7, this could be because some of the 7’s in the dataset contain dashes there and some don’t, so the model might have learned not to really pay attention to that.</p>
 
-<h3 id="areas-of-improvement">Areas of Improvement</h3>
+<h2 id="areas-of-improvement">Areas of Improvement</h2>
 
 <p>However, CAM is by no means perfect. For one, the output visualizations are not very high resolution due to the upscaling step. Additionally, CAM only works for a relatively small set of possible models, which means it is still stuck in the accuracy vs interpretability trade-off as there could be other models with better accuracy that CAM can’t be applied on, meaning they are less interpretable. Further issues that both CAM and Grad-CAM have will be discussed below.</p>
 
-<h2 id="gradient-based-class-activation-mappings-grad-cam">Gradient Based Class Activation Mappings (Grad-CAM)</h2>
+<h1 id="gradient-based-class-activation-mappings-grad-cam">Gradient Based Class Activation Mappings (Grad-CAM)</h1>
 
 <p>Now we can finally talk about Grad-CAM! The basic idea is the same as CAM, we are again trying to obtain class-discriminative localization maps. Only now, we are using gradient information (hence Gradient Based CAM) flowling into the last convolutional layer to get importance values for each neuron for a particular decision. This is instead of using the weights to the output layer from GAP as seen in CAM. Due to the nature of gradients, Grad-CAM can be used for any convolutional layer. However, it is typically uses the last convolutional layer because <a href="https://arxiv.org/pdf/1512.02017.pdf">deeper representations</a> in CNNs have been found to capture <a href="https://arxiv.org/pdf/1206.5538.pdf">higher level visual concepts</a> which is what we are after.</p>
 
@@ -557,7 +557,7 @@
 
 <p>Now here you might be thinking, <em>why is this guy using \(y^c\) <strong>after the softmax</strong>, I thought it was supposed to be <strong>before the softmax</strong></em>? And you would be right, the paper does say before. However, I found that using $y^c$ <strong>after the softmax</strong> worked better. I believe this is because when calculating the gradient backwards I am setting the output to 0 for all classes and 1 for the target class. However, without the softmax, the outputs of the model are very far away from 0 and 1 for the other and target classes. I think (I am not sure) that this results in the final Grad-CAM output having most values that are 0 or less as the typical output for the target class is much higher than 1 and for the other classes is much less than 0 so the gradients are negative. Then when applying the ReLU to the Grad-CAM some images were just totally 0. But with the softmax applied the final outputs look much better. Perhaps some sort of normalization within the network could help.</p>
 
-<h3 id="guided-grad-cam">Guided Grad-CAM</h3>
+<h2 id="guided-grad-cam">Guided Grad-CAM</h2>
 
 <p>So far, Grad-CAM seems great! Because of the gradients we can now apply this visualization technique to a much wider range of models, sort of allowing us to beat the accuracy vs interpretability trade-off. But another thing we wanted to achive is to obtain high resolution visual explanations. To do this, we need Guided Grad-CAM.</p>
 
@@ -579,7 +579,7 @@
 
 <p><img src="/images/gradCAM/gradCAMGradient1.png" alt="Grad-CAM Implementation Pic" title="Grad-CAM Implementation Pic" /></p>
 
-<h3 id="uses-1">Uses</h3>
+<h2 id="uses-1">Uses</h2>
 
 <p>Grad-CAM can be used for many things, I’ll just mention a few of them:</p>
 <ul>
@@ -607,7 +607,7 @@
 
 <p><img src="/images/gradCAM/gradCAMGuided582.png" alt="Grad-CAM Implementation Pic" title="Grad-CAM Implementation Pic" /></p>
 
-<p>Looking at the “Guided” (I’m using quotes because it is technically not guided backprop just the gradient of the input, explained more above) Grad-CAM output, it is clear how that can be mistaken as a 2. The heatmap also shows that the model isn’t paying attention to the bottom of the digit to classify it as a 2.</p>
+<p>Looking at the “Guided” (I’m using quotes because it is technically not guided backprop just the gradient of the input, explained more above) Grad-CAM output, it is clear how that can be mistaken as a 2. The heatmap also shows that the model isn’t paying attention to the bottom of the digit much to classify it as a 2.</p>
 
 <p>For the weakly supervised object localization it is clear that you could draw a relatively suitable bounding box to localize the character. This worked better for some input images than other in my implementation. This 4 is an example of a digit for which it worked pretty well.</p>
 
@@ -621,19 +621,17 @@
 
 <p><img src="/images/gradCAM/gradCAMGuided19.png" alt="Grad-CAM Implementation Pic" title="Grad-CAM Implementation Pic" /></p>
 
-<p>The CAM model didn’t look at the base of the 4 as much, but the Grad-CAM model clearly does, which could be an explanation for why it got this classification correct.</p>
-
 <p>One cool thing to note is how the Grad-CAM model had better accuracy on the test data than the CAM model. This is likely due to the greater freedom for model choice that Grad-CAM allows. Of course, this is not very rigorous and I could have made my CAM model much better than my simple Grad-CAM model probably by maybe adding more conv layers or trying some regularization techniques or something, but the point is that even from this simple toy example, we can see that Grad-CAM does a better job of beating the accuracy vs. interpretability trade-off.</p>
 
-<h3 id="areas-of-improvement-1">Areas of Improvement</h3>
+<h2 id="areas-of-improvement-1">Areas of Improvement</h2>
 
 <p>Even though Grad-CAM fixes some issues that CAM had, it is still not perfect. Heatmaps are a step in the right direction, but still may fail to explain complex relationships in images. There are <a href="https://openaccess.thecvf.com/content/CVPR2021/papers/Ge_A_Peek_Into_the_Reasoning_of_Neural_Networks_Interpreting_With_CVPR_2021_paper.pdf">more modern techniques</a> that can do a better job of this. Also Grad-CAM is only for computer vision, there are many other areas of AI that also need interpretation.</p>
 
-<h2 id="conclusion">Conclusion</h2>
+<h1 id="conclusion">Conclusion</h1>
 
 <p>To me, the simplicity of Grad-CAM is really exciting. I find interpretability as a whole a really fascinating and seemingly important field and I can’t wait to read and write more about it in the future 🤓.</p>
 
-<h2 id="references">References:</h2>
+<h1 id="references">References:</h1>
 
 <ul>
   <li><a href="https://arxiv.org/pdf/1512.04150.pdf">CAM</a></li>
@@ -700,7 +698,8 @@
 ">Previous</a>
     
     
-      <a href="#" class="pagination--pager disabled">Next</a>
+      <a href="http://localhost:4000/posts/2013/08/transformersPart1/" class="pagination--pager" title="Understanding Transformers Part 1: Attention Mechanisms
+">Next</a>
     
   </nav>
 
@@ -716,6 +715,48 @@
         <h4 class="page__related-title">You May Also Enjoy</h4>
       
       <div class="grid__wrapper">
+        
+          
+
+
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="http://schema.org/CreativeWork">
+    
+
+    <h2 class="archive__item-title" itemprop="headline">
+      
+        <a href="http://localhost:4000/posts/2013/08/transformersPart1/" rel="permalink">Understanding Transformers Part 1: Attention Mechanisms
+</a>
+      
+    </h2>
+    
+    
+      <p class="page__meta"><i class="fa fa-clock-o" aria-hidden="true"></i> 
+
+
+  
+	  18 minute read
+	
+</p>
+    
+
+        
+         <p class="page__date"><strong><i class="fa fa-fw fa-calendar" aria-hidden="true"></i> Published:</strong> <time datetime="2022-01-10T00:00:00-08:00">January 10, 2022</time></p>
+        
+
+    
+    <p class="archive__item-excerpt" itemprop="description"><p>Part one in a series of posts about understanding transformers. This post focuses on attention mechanisms.</p>
+</p>
+    
+    
+    
+
+  </article>
+</div>
+
         
           
 

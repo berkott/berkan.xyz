@@ -1,4 +1,200 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.9.0">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" /><updated>2022-01-08T19:24:07-08:00</updated><id>http://localhost:4000/feed.xml</id><title type="html">Berkan</title><subtitle>Student at Columbia University looking to improve the wellbeing of sentient beings</subtitle><author><name>Berkan</name><email>berkan.ottlik [at] columbia [dot] edu</email></author><entry><title type="html">Grad-CAM and Basic CNN Interpretability (with Implementation!)</title><link href="http://localhost:4000/posts/2021/12/gradCAM/" rel="alternate" type="text/html" title="Grad-CAM and Basic CNN Interpretability (with Implementation!)" /><published>2021-12-01T00:00:00-08:00</published><updated>2021-12-01T00:00:00-08:00</updated><id>http://localhost:4000/posts/2021/12/gradCAM</id><content type="html" xml:base="http://localhost:4000/posts/2021/12/gradCAM/">&lt;p&gt;&lt;em&gt;&lt;strong&gt;WARNING:&lt;/strong&gt; This post assumes you have a basic understanding of neural networks and specifically Convolutional Neural Networks (CNNs). Some Python knowledge (PyTorch and NumPy mainly) would also be useful to understand the code samples.&lt;/em&gt;&lt;/p&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.9.0">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" /><updated>2022-01-10T20:41:09-08:00</updated><id>http://localhost:4000/feed.xml</id><title type="html">Berkan</title><subtitle>Student at Columbia University looking to improve the wellbeing of sentient beings</subtitle><author><name>Berkan</name><email>berkan.ottlik [at] columbia [dot] edu</email></author><entry><title type="html">Understanding Transformers Part 1: Attention Mechanisms</title><link href="http://localhost:4000/posts/2013/08/transformersPart1/" rel="alternate" type="text/html" title="Understanding Transformers Part 1: Attention Mechanisms" /><published>2022-01-10T00:00:00-08:00</published><updated>2022-01-10T00:00:00-08:00</updated><id>http://localhost:4000/posts/2013/08/transformersPart1</id><content type="html" xml:base="http://localhost:4000/posts/2013/08/transformersPart1/">&lt;p&gt;&lt;em&gt;&lt;strong&gt;WARNING:&lt;/strong&gt; This post assumes you have a basic understanding of neural networks and specifically Recurrent Neural Networks (RNNs).&lt;/em&gt;&lt;/p&gt;
+
+&lt;p&gt;There are sometimes things in my life, that I’ve heard about many times, but never totally understood. Transformers are one of those things. That’s why, in this series of posts, I’m going to finally get a better understanding of transformers, and I invite you to come along this journey with me. I’m going to start with the building blocks of transformers, namely attention mechanisms. I’m going to base most of this post on the paper &lt;a href=&quot;https://arxiv.org/pdf/1409.0473.pdf&quot;&gt;Neural Machine Translation by Jointly Learning to Align and Translate&lt;/a&gt;, which first introduced attention mechanisms in 2014 (the year Germany won the world cup 😃⚽️).&lt;/p&gt;
+
+&lt;p&gt;I have not yet implemented this paper, but I found this &lt;a href=&quot;https://github.com/bentrevett/pytorch-seq2seq/blob/master/3%20-%20Neural%20Machine%20Translation%20by%20Jointly%20Learning%20to%20Align%20and%20Translate.ipynb&quot;&gt;good implementation&lt;/a&gt; online. However, I might come back to this post and add my own implementation 🙃.&lt;/p&gt;
+
+&lt;h1 id=&quot;neural-machine-translation&quot;&gt;Neural Machine Translation&lt;/h1&gt;
+
+&lt;p&gt;Neural machine translation aims to take an input sentence comprised of the input words \(\mathbf{x} = (x_1, \ldots, x_{T_x})\) and translate it into an output sentence \(\mathbf{y} = (y_1, \ldots, y_{T_y})\) in a different language, where  using only a single (&lt;em&gt;They say single in the paper but technically their model comprises of multiple neural networks as you will soon. I guess sometimes these things are just a little vague, but I think you get the idea&lt;/em&gt;), pretty large, neural network. I’m now going to introduce a recurring translation example used in the paper.&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;English Input Sentence:&lt;/strong&gt;&lt;/p&gt;
+&lt;blockquote&gt;
+  &lt;p&gt;An admitting privilege is the right of a doctor to admit a patient to a hospital or a medical centre to carry out a diagnosis or a procedure, based on his status as a health care worker at a hospital.&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;&lt;strong&gt;A Reference Translation:&lt;/strong&gt;&lt;/p&gt;
+&lt;blockquote&gt;
+  &lt;p&gt;Le privilege d’admission est le droit d’un medecin, en vertu de son statut de membre soignant d’un hopital, d’admettre un patient dans un hopital ou un centre medical afin d’y delivrer un ´diagnostic ou un traitement.&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;&lt;em&gt;Warning:&lt;/em&gt; The accents on top of some of the letters have disappeared during the copy/paste.&lt;/p&gt;
+
+&lt;p&gt;Now I don’t know French. So I’m just going to trust some of the authors analysis on the accuracy of their model’s translations. But it would be useful, if I were maybe implementing this myself or just to rapidly test, for there to be a way to automatically gauge how good a generated translation is. Luckily, there is something for this, called the &lt;a href=&quot;https://aclanthology.org/P02-1040.pdf&quot;&gt;BLEU Score&lt;/a&gt;!&lt;/p&gt;
+
+&lt;h2 id=&quot;bleu-score&quot;&gt;BLEU Score&lt;/h2&gt;
+
+&lt;p&gt;The &lt;a href=&quot;https://aclanthology.org/P02-1040.pdf&quot;&gt;paper&lt;/a&gt; does a really good job of explaining how they derived the BLEU score, I’m just going to give a brief overview.&lt;/p&gt;
+
+&lt;p&gt;The core assumption that the BLEU (BiLingual Evaluation Understudy) score paper makes, is that the closer a machine translation is to a professional human translation, the better it is. So really all the BLEU score does is measure the &lt;strong&gt;closeness&lt;/strong&gt; of a machine translation to one or more reference human translations.&lt;/p&gt;
+
+&lt;p&gt;Essentially, BLEU tries to compare \(n \text{-} gram\) (basically just sequences of \(n\) characters) in the machine translation to the reference translations. There is also an added brevity penalty to avoid translations that are just really short. The equations below are for scoring texts with multiple sentences.&lt;/p&gt;
+
+\[BLEU = BP \cdot \exp \left ( \sum_{n=1}^N w_n \log{p_n} \right )\]
+
+&lt;p&gt;Where:&lt;/p&gt;
+
+\[BP = \begin{cases} 
+    1 &amp;amp; \text{if } c &amp;gt; r \\
+    e^{1-r/c} &amp;amp; \text{if }  c \le r 
+  \end{cases}\]
+
+&lt;ul&gt;
+  &lt;li&gt;\(c\) represents the length of the candidate translation.&lt;/li&gt;
+  &lt;li&gt;\(r\) represents the effective corpus length, and is calculated by summing the best match lengths (best match length is just the closest reference sentence length, so if the candidate translation for a sentence has 12 words and there are references with 10 and 13 words, the best match length would be 13) for each candidate sentence in the corpus.&lt;/li&gt;
+&lt;/ul&gt;
+
+\[w_n = \frac{1}{N}\]
+
+&lt;ul&gt;
+  &lt;li&gt;\(N\) is usually around 4&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;!-- $$ p_n = \frac{\displaystyle \sum_{C \in \{Candidates\}} \sum_{n \text{-} gram \in {C}} Count_{clip} (n \text{-} gram)}{\displaystyle \sum_{C' \in \{Candidates\}} \sum_{n \text{-} gram' \in {C'}} Count (n \text{-} gram')} $$ --&gt;
+
+\[p_n = \displaystyle \sum_{C \in \{Candidates\}} \sum_{n \text{-} gram \in {C}} \frac{Count_{clip} (n \text{-} gram)}{Count (n \text{-} gram)}\]
+
+&lt;ul&gt;
+  &lt;li&gt;\(C\) represents a sentence in \(Candidates\), which contains all the sentences in the translation. Now there is a technicality here, when I say \(C\) is “a sentence”, what I really mean is \(C\) is the translation of a sentence and could technically be multiple sentences.&lt;/li&gt;
+&lt;/ul&gt;
+
+\[Count_{clip} = \min(Count, Max \_ Ref \_ Count)\]
+
+&lt;ul&gt;
+  &lt;li&gt;\(Max \_ Ref \_ Count\) is the maximum number of times an \(n \text{-} gram\) is seen in a single reference translation.&lt;/li&gt;
+  &lt;li&gt;\(Count\) is just the number of times an \(n \text{-} gram\) is seen in the candidate translation.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Ok, I know I just threw a lot of math at you and you might be a bit confused. Basically, we are going over different values of \(n\) from 1 to about 4, and (in the case where we are using our simple, uniform, definition for \(w_n\)) taking the average of the number of those \(n \text{-} grams\) are seen in the candidate translation and the reference translations, over the number of those \(n \text{-} grams\) in the candidate translation. Finally, we have this brevity penalty that penalizes translations that are very short. Overal this outputs a number from 0 to 1, and the higher the number is the more it is like the reference translations. This is a bit of an over simplification, but this is the basic idea, so if none of the math made sense and you just understood this, you should be ok for now.&lt;/p&gt;
+
+&lt;p&gt;Now that we have some background on neural machine translation and the BLEU score, we are ready to tackle attention! We will start by understanding previous approaches to neural machine translation, and then see how the attention mechanism makes it better.&lt;/p&gt;
+
+&lt;h1 id=&quot;previous-approach&quot;&gt;Previous Approach&lt;/h1&gt;
+
+&lt;p&gt;The previous approach mentioned in the paper is called RNN Encoder-Decoder, and was proposed by &lt;a href=&quot;https://arxiv.org/pdf/1406.1078.pdf&quot;&gt;Cho et al.&lt;/a&gt; and &lt;a href=&quot;https://arxiv.org/pdf/1409.3215.pdf&quot;&gt;Sutskever et al.&lt;/a&gt;.&lt;/p&gt;
+
+&lt;h2 id=&quot;encoder&quot;&gt;Encoder&lt;/h2&gt;
+
+&lt;p&gt;Essentially, this model works by first having an encoder that reads in the input sentence \(\mathbf{x}\) and outputs a fixed-length vector \(c\) called the context vector (more on this later). This can be done as follows:&lt;/p&gt;
+
+\[h_t = f(x_t, h_{t-1})\]
+
+\[c = q(\{h_1, \ldots , h_{T_x} \})\]
+
+&lt;p&gt;The paper describes how the previous approaches used an LSTM as \(f\) and \(h_{T_x} = q(\{h_1, \ldots , h_{T_x} \})\). Hopefully, you can see how this makes sense given your background RNN understanding. It’s pretty much a many to one RNN, where we are just reading in the sentence word by word and outputting the hidden state after the final word is read in to the decoder.&lt;/p&gt;
+
+&lt;h2 id=&quot;decoder&quot;&gt;Decoder&lt;/h2&gt;
+
+&lt;p&gt;The decoder aims to predict the next word \(y_{t'}\) given the context vector \(c\) and the previously predicted words \(\{y_1, \ldots, y_{t'-1} \}\). The decoder basically defines a probability over a translation \(\mathbf{y}\) that goes as follows, decomposing the joint probability into ordered conditional:&lt;/p&gt;
+
+\[p(\mathbf{y}) = \prod_{t=1}^{T} p(y_t | \{ y_1 \ldots, y_{t-1}\}, c)\]
+
+&lt;p&gt;RNNs allow us to model each conditional probability as:&lt;/p&gt;
+
+\[p(y_t | \{ y_1 \ldots, y_{t-1}\}, c) = g(y_{t-1}, s_t, c)\]
+
+&lt;p&gt;where \(g\) is an RNN (GRU, LSTM, whatever) and \(s_t\) represents the hidden state. This is just a one to many RNN that takes an input context vector \(c\) and outputs a translation \(\mathbf{y}\).&lt;/p&gt;
+
+&lt;h2 id=&quot;issues&quot;&gt;Issues&lt;/h2&gt;
+
+&lt;p&gt;The biggest problem that the authors mention with this model is the fact that it uses a fixed length context vector \(c\). This forces the model to squash all the information from the input sentence, into a set length vector. The problem is this sentence can be of different lengths. The attention mechanism that is proposed in this paper frees the mode from this fixed length context vector \(c\) and is shown to achieve much better performance on longer sentences.&lt;/p&gt;
+
+&lt;h1 id=&quot;new-model&quot;&gt;New Model&lt;/h1&gt;
+
+&lt;p&gt;The new mechanism that they claim learns to align and translate uses the attention mechanism and looks as follows:&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/images/transformers1/attentionMechanism.png&quot; alt=&quot;Attention Mechanism&quot; title=&quot;Attention Mechanism&quot; /&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;decoder-1&quot;&gt;Decoder&lt;/h2&gt;
+
+&lt;p&gt;Instead of defining each conditional probability as in Eq. 9, we can define them as follows:&lt;/p&gt;
+
+\[p(y_i | \{ y_1 \ldots, y_{i-1}\}, \mathbf{x}) = g(y_{i-1}, s_i, c_i)\]
+
+&lt;p&gt;\(g\) is just some RNN model again.&lt;/p&gt;
+
+\[s_i = f(s_{i-1}, y_{i-1}, c_i)\]
+
+&lt;p&gt;\(s_i\) is just the hidden state at time \(i\).&lt;/p&gt;
+
+&lt;p&gt;&lt;em&gt;Note how the \(c\) term now has a subscript!&lt;/em&gt; This is because the context vector \(c_i\) term now depends on a sequence of annotations \((h_1, \ldots, h_{T_x})\) which the encoder creates. \(c_i\) is a weighted sum of these annotations.&lt;/p&gt;
+
+\[c_i = \sum_{j=1}^{T_x} \alpha_{ij} h_j\]
+
+\[\alpha_{ij} = \frac{\exp(e_{ij})}{\sum_{k=1}^{T_x} \exp(e_{ik})} = \sigma(e_{i})_j\]
+
+&lt;p&gt;Where \(\sigma\) is just the softmax function, and:&lt;/p&gt;
+
+\[e_{ij} = a(s_{i-1}, h_j)\]
+
+&lt;p&gt;\(a\) is an alignment model which scores how well inputs around position j in the candidate sentence and the output translation at i match. Here \(a\) is just a feedforward neural network that is trained jointly with everything else.&lt;/p&gt;
+
+&lt;p&gt;While this may all look scary at first, all that’s really going on is that we are using \(c_i\) for the \(i\)th output word instead of \(c\). And we are calculating \(c_i\) as a weighted sum of these weird annotations \(h\) that the encoder creates. \(h_j\) contains information about the whole input sentence with a focus on the parts surrounding the \(j\)th word.&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;Pay attention to the attention mechanism here 😉!!&lt;/strong&gt; These weights \(\alpha_{ij}\) tell the model what parts of the sentence to pay attention to when predicting the \(i\)th word. The alignment model figures out what parts of the sentence to pay attention to based on the previous hidden state \(s_{i-1}\).&lt;/p&gt;
+
+&lt;p&gt;The cool thing is this is kind of similar to what we people do as well. If I had to translate a short sentence from English to German (I don’t know French but I do know German), I could just read the entire sentence (encoder), store it in my brain (context vector \(c\)), and then say it in German (decoder). But if I had to translate a longer sentence, I would first try to translate the beginning of the English sentence, and pay attention to the words over there. I wouldn’t care about the words at the end of the sentence to translate the ones at the beginning.&lt;/p&gt;
+
+&lt;h2 id=&quot;encoder-1&quot;&gt;Encoder&lt;/h2&gt;
+
+&lt;p&gt;The encoder is responsible for creating these annotations \((h_1, \ldots, h_{T_x})\) and does so using a &lt;a href=&quot;https://ieeexplore.ieee.org/document/650093&quot;&gt;bidirectional RNN&lt;/a&gt; (BiRNN). The reason a regular RNN is not used is because a regular RNN only has information about the previous words, which wouldn’t allow annotations to have context that comes later in the sentence that could be important to the meaning of the current part of the sentence.&lt;/p&gt;
+
+&lt;p&gt;The BiRNN consists of a forward and backward RNNs that read the sentences in regular and reverse order respectively and calculate the hidden states \((\overrightarrow{h_1}, \ldots, \overrightarrow{h_{T_x}})\) and \((\overleftarrow{h_1}, \ldots, \overleftarrow{h_{T_x}})\) respectively. These are concatenated s.t. the hidden state \(h_j\) corresponding to word \(x_j\) is \(\left [ \overrightarrow{h_j^T} ; \overleftarrow{h_j^T} \right ]\). This way \(h_j\) contains context from before and after in the sentence, mainly focused near the \(j\)th word because of RNNs tendency to represent recent inputs better.&lt;/p&gt;
+
+&lt;h1 id=&quot;performance&quot;&gt;Performance&lt;/h1&gt;
+
+&lt;p&gt;The authors of the paper trained 4 different models: RNNencdec30, RNNencdec50, RNNsearch30, and RNNsearch50, where RNNencdec is the previous model and RNNsearch is the new attention based model, and the number at the end represents the longest sentence size seen in the training data. The graph below shows the BLEU scores for these different models on different test sentence lengths. Please note how the BLEU score is greater than 1 here, it was just multiplied by 100.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/images/transformers1/attentionMechanismPerformance.png&quot; alt=&quot;Attention Mechanism Performance&quot; title=&quot;Attention Mechanism Performance&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;The impressive thing here is that the performance for the attention based model has better performance across all sentence lengths. It is intuitively to be expected that it performs better for longer sentences given that the model avoids the fixed-length context vector \(c\), but the fact that it performs better across the board is really impressive.&lt;/p&gt;
+
+&lt;p&gt;Going back to our previous example from the start of the post we can see how RNNencdec-50 fails at longer sentences:&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;English Input Sentence:&lt;/strong&gt;&lt;/p&gt;
+&lt;blockquote&gt;
+  &lt;p&gt;An admitting privilege is the right of a doctor to admit a patient to a hospital or a medical centre to carry out a diagnosis or a procedure, based on his status as a health care worker at a hospital.&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;&lt;strong&gt;RNNencdec-50:&lt;/strong&gt;&lt;/p&gt;
+&lt;blockquote&gt;
+  &lt;p&gt;Un privilege d’admission est le droit d’un medecin de reconnaitre un patient a l’hopital ou un centre medical d’un diagnostic ou de prendre un diagnostic en
+fonction de son etat de sante.&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;&lt;strong&gt;RNNencdec-50 Translated Back Using Google Translate:&lt;/strong&gt;&lt;/p&gt;
+&lt;blockquote&gt;
+  &lt;p&gt;An admitting privilege is the right of a physician to recognize a patient at hospital or medical center for a diagnosis or to take a diagnosis by depending on his state of health.&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;This translation is clearly not right at the end. But the RNNsearch-50 translation on the other hand…&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;RNNsearch-50:&lt;/strong&gt;&lt;/p&gt;
+&lt;blockquote&gt;
+  &lt;p&gt;Un privilege d’admission est le droit d’un medecin d’admettre un patient a un hopital ou un centre medical pour effectuer un diagnostic ou une procedure, selon son statut de travailleur des soins de sante a l’hopital.&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;&lt;strong&gt;RNNsearch-50 Translated Back Using Google Translate:&lt;/strong&gt;&lt;/p&gt;
+&lt;blockquote&gt;
+  &lt;p&gt;An admitting privilege is the right of a physician to admit a patient to an hospital or medical center to perform a diagnosis or procedure, depending on his status as a health care worker at the hospital.&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;Impressive huh?&lt;/p&gt;
+
+&lt;p&gt;The paper also shows these plots showing the \(\alpha_{ij}\) of the \(j\)th source word for the \(i\)th target word. You can see how the model learned to pay attention to things that are intuitive for people as well. “Destruction” and “La destruction” go together but “Syria” isn’t important for that translation.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/images/transformers1/attentionMechanismAlignments.png&quot; alt=&quot;Attention Mechanism Alignments&quot; title=&quot;Attention Mechanism Alignments&quot; /&gt;&lt;/p&gt;
+
+&lt;h1 id=&quot;conclusion&quot;&gt;Conclusion&lt;/h1&gt;
+
+&lt;p&gt;I think attention is really cool. The clever way the alignment model is tied into the RNNs and that it actually works to create much better translations is really impressive. Also the way it’s at least somewhat more biologically plausible is also exciting (this is a fun topic). The next post will continue to lay the groundwork for transformers. Stay tuned 😎.&lt;/p&gt;
+
+&lt;h1 id=&quot;references&quot;&gt;References:&lt;/h1&gt;
+&lt;ul&gt;
+  &lt;li&gt;&lt;a href=&quot;https://arxiv.org/pdf/1409.0473.pdf&quot;&gt;Neural Machine Translation by Jointly Learning to Align and Translate&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://aclanthology.org/P02-1040.pdf&quot;&gt;BLEU Score&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://github.com/bentrevett/pytorch-seq2seq/blob/master/3%20-%20Neural%20Machine%20Translation%20by%20Jointly%20Learning%20to%20Align%20and%20Translate.ipynb&quot;&gt;Someone Else’s Implementation&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;</content><author><name>Berkan</name><email>berkan.ottlik [at] columbia [dot] edu</email></author><category term="Artificial Intelligence" /><summary type="html">Part one in a series of posts about understanding transformers. This post focuses on attention mechanisms.</summary></entry><entry><title type="html">Grad-CAM and Basic CNN Interpretability (with Implementation!)</title><link href="http://localhost:4000/posts/2021/12/gradCAM/" rel="alternate" type="text/html" title="Grad-CAM and Basic CNN Interpretability (with Implementation!)" /><published>2021-12-30T00:00:00-08:00</published><updated>2021-12-30T00:00:00-08:00</updated><id>http://localhost:4000/posts/2021/12/gradCAM</id><content type="html" xml:base="http://localhost:4000/posts/2021/12/gradCAM/">&lt;p&gt;&lt;em&gt;&lt;strong&gt;WARNING:&lt;/strong&gt; This post assumes you have a basic understanding of neural networks and specifically Convolutional Neural Networks (CNNs). Some Python knowledge (PyTorch and NumPy mainly) would also be useful to understand the code samples.&lt;/em&gt;&lt;/p&gt;
 
 &lt;p&gt;&lt;em&gt;This post is the written extension of a presentation given for a deep learning theory reading group at Columbia.&lt;/em&gt;&lt;/p&gt;
 
@@ -6,7 +202,7 @@
 
 &lt;p&gt;My implementation in PyTorch on the MNIST dataset is in a jupyter notebook and can be found in html form &lt;a href=&quot;https://berkan.xyz/files/gradCAM.html&quot;&gt;here&lt;/a&gt;. The GitHub repo can be found &lt;a href=&quot;https://github.com/berkott/cnn-interpretation-pytorch&quot;&gt;here&lt;/a&gt;. I will show some of the result images and code here.&lt;/p&gt;
 
-&lt;h2 id=&quot;very-basics-of-interpretability&quot;&gt;Very Basics of Interpretability&lt;/h2&gt;
+&lt;h1 id=&quot;very-basics-of-interpretability&quot;&gt;Very Basics of Interpretability&lt;/h1&gt;
 
 &lt;p&gt;Simply put, interpretability matters. And it matters for a variety of reasons. You could look at it from the perspective of AI Safety, if we have more intepretable models, perhaps we can find &lt;a href=&quot;https://www.alignmentforum.org/posts/CzZ6Fch4JSpwCpu6C/interpretability&quot;&gt;unknown safety problems&lt;/a&gt; in our models that can prevent doom. This is something I may explore more in a future blog post :)&lt;/p&gt;
 
@@ -23,7 +219,7 @@
 
 &lt;p&gt;Now we are ready to dig in. However, before talking about Grad-CAM we will discuss &lt;a href=&quot;https://arxiv.org/pdf/1512.04150.pdf&quot;&gt;CAM&lt;/a&gt;.&lt;/p&gt;
 
-&lt;h2 id=&quot;class-activation-mappings-cam&quot;&gt;Class Activation Mappings (CAM)&lt;/h2&gt;
+&lt;h1 id=&quot;class-activation-mappings-cam&quot;&gt;Class Activation Mappings (CAM)&lt;/h1&gt;
 
 &lt;p&gt;CAM aims to create class-discriminative localization maps that essentially show what the CNN looks at when making a certain classification. These heatmaps look like this:&lt;/p&gt;
 
@@ -37,7 +233,7 @@
 
 &lt;p&gt;However, before describing the rest of CAM, I first want to explain &lt;a href=&quot;https://alexisbcook.github.io/2017/global-average-pooling-layers-for-object-localization/&quot;&gt;Global Average Pooling (GAP)&lt;/a&gt;.&lt;/p&gt;
 
-&lt;h3 id=&quot;global-average-pooling&quot;&gt;Global Average Pooling&lt;/h3&gt;
+&lt;h2 id=&quot;global-average-pooling&quot;&gt;Global Average Pooling&lt;/h2&gt;
 
 &lt;p&gt;When GAP is used, it is typically applied to the output of the final convolutional layer. It collapses the \(h \times w \times d\) output down to a \(1 \times 1 \times d\) vector. One slightly weird thing is that in the CAM paper they don’t actually take the average of each of the \(d\) feature maps that come from the final convolutional layer, they just take the sum of all.  &lt;em&gt;&lt;strong&gt;Notation alert:&lt;/strong&gt; I’m going to use notation that is more consistent with the Grad-CAM paper.&lt;/em&gt;&lt;/p&gt;
 
@@ -91,7 +287,7 @@
     &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;y&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;x&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
-&lt;h3 id=&quot;back-to-cam&quot;&gt;Back to CAM&lt;/h3&gt;
+&lt;h2 id=&quot;back-to-cam&quot;&gt;Back to CAM&lt;/h2&gt;
 
 &lt;p&gt;Now we can come back to CAM. CAM requires a sort of specific architecture to work. It requires the network consists of convolutional layers (these can have any sort of pooling, dropout, residual blocks etc.), then a GAP layer, and finally an output layer.&lt;/p&gt;
 
@@ -129,11 +325,11 @@
   &lt;span class=&quot;n&quot;&gt;sum_res&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;torch&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;sum&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;mult_res&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
-&lt;h3 id=&quot;gap-vs-gmp&quot;&gt;GAP vs GMP&lt;/h3&gt;
+&lt;h2 id=&quot;gap-vs-gmp&quot;&gt;GAP vs GMP&lt;/h2&gt;
 
 &lt;p&gt;A question that might come up is, why GAP and why not Global Max Pooling (GMP). In the paper, they cite emiprical evidence that says that GAP and GMP have similar classification performance, but GAP has better localization performance. Also intuitive reasoning says that GAP will encourage the network to identify the extent of an object while GMP encourages it to find one disciminative feature.&lt;/p&gt;
 
-&lt;h3 id=&quot;uses&quot;&gt;Uses&lt;/h3&gt;
+&lt;h2 id=&quot;uses&quot;&gt;Uses&lt;/h2&gt;
 
 &lt;p&gt;CAM is already pretty useful! It can lend insights into failure modes (such as this &lt;a href=&quot;https://www.jefftk.com/p/detecting-tanks&quot;&gt;famous US Army story&lt;/a&gt; that may or may not be true). Another thing is that it can be used as a weakly supervised model (as opposed to a strongly supervised model given bounding boxes during training time) for object localiation. The idea is that you basically draw bounding boxes around the CAM visualizations per class to get your localization. It actually performed decently well (see paper for more details).&lt;/p&gt;
 
@@ -159,11 +355,11 @@
 
 &lt;p&gt;If you drew a good bounding box around the redder regions of the image, you would localize the 7 pretty well. Another cool thing you can see here is that the model doesn’t seem to value what happens around the middle of the slanted line in the 7, this could be because some of the 7’s in the dataset contain dashes there and some don’t, so the model might have learned not to really pay attention to that.&lt;/p&gt;
 
-&lt;h3 id=&quot;areas-of-improvement&quot;&gt;Areas of Improvement&lt;/h3&gt;
+&lt;h2 id=&quot;areas-of-improvement&quot;&gt;Areas of Improvement&lt;/h2&gt;
 
 &lt;p&gt;However, CAM is by no means perfect. For one, the output visualizations are not very high resolution due to the upscaling step. Additionally, CAM only works for a relatively small set of possible models, which means it is still stuck in the accuracy vs interpretability trade-off as there could be other models with better accuracy that CAM can’t be applied on, meaning they are less interpretable. Further issues that both CAM and Grad-CAM have will be discussed below.&lt;/p&gt;
 
-&lt;h2 id=&quot;gradient-based-class-activation-mappings-grad-cam&quot;&gt;Gradient Based Class Activation Mappings (Grad-CAM)&lt;/h2&gt;
+&lt;h1 id=&quot;gradient-based-class-activation-mappings-grad-cam&quot;&gt;Gradient Based Class Activation Mappings (Grad-CAM)&lt;/h1&gt;
 
 &lt;p&gt;Now we can finally talk about Grad-CAM! The basic idea is the same as CAM, we are again trying to obtain class-discriminative localization maps. Only now, we are using gradient information (hence Gradient Based CAM) flowling into the last convolutional layer to get importance values for each neuron for a particular decision. This is instead of using the weights to the output layer from GAP as seen in CAM. Due to the nature of gradients, Grad-CAM can be used for any convolutional layer. However, it is typically uses the last convolutional layer because &lt;a href=&quot;https://arxiv.org/pdf/1512.02017.pdf&quot;&gt;deeper representations&lt;/a&gt; in CNNs have been found to capture &lt;a href=&quot;https://arxiv.org/pdf/1206.5538.pdf&quot;&gt;higher level visual concepts&lt;/a&gt; which is what we are after.&lt;/p&gt;
 
@@ -275,7 +471,7 @@
 
 &lt;p&gt;Now here you might be thinking, &lt;em&gt;why is this guy using \(y^c\) &lt;strong&gt;after the softmax&lt;/strong&gt;, I thought it was supposed to be &lt;strong&gt;before the softmax&lt;/strong&gt;&lt;/em&gt;? And you would be right, the paper does say before. However, I found that using $y^c$ &lt;strong&gt;after the softmax&lt;/strong&gt; worked better. I believe this is because when calculating the gradient backwards I am setting the output to 0 for all classes and 1 for the target class. However, without the softmax, the outputs of the model are very far away from 0 and 1 for the other and target classes. I think (I am not sure) that this results in the final Grad-CAM output having most values that are 0 or less as the typical output for the target class is much higher than 1 and for the other classes is much less than 0 so the gradients are negative. Then when applying the ReLU to the Grad-CAM some images were just totally 0. But with the softmax applied the final outputs look much better. Perhaps some sort of normalization within the network could help.&lt;/p&gt;
 
-&lt;h3 id=&quot;guided-grad-cam&quot;&gt;Guided Grad-CAM&lt;/h3&gt;
+&lt;h2 id=&quot;guided-grad-cam&quot;&gt;Guided Grad-CAM&lt;/h2&gt;
 
 &lt;p&gt;So far, Grad-CAM seems great! Because of the gradients we can now apply this visualization technique to a much wider range of models, sort of allowing us to beat the accuracy vs interpretability trade-off. But another thing we wanted to achive is to obtain high resolution visual explanations. To do this, we need Guided Grad-CAM.&lt;/p&gt;
 
@@ -297,7 +493,7 @@
 
 &lt;p&gt;&lt;img src=&quot;/images/gradCAM/gradCAMGradient1.png&quot; alt=&quot;Grad-CAM Implementation Pic&quot; title=&quot;Grad-CAM Implementation Pic&quot; /&gt;&lt;/p&gt;
 
-&lt;h3 id=&quot;uses-1&quot;&gt;Uses&lt;/h3&gt;
+&lt;h2 id=&quot;uses-1&quot;&gt;Uses&lt;/h2&gt;
 
 &lt;p&gt;Grad-CAM can be used for many things, I’ll just mention a few of them:&lt;/p&gt;
 &lt;ul&gt;
@@ -325,7 +521,7 @@
 
 &lt;p&gt;&lt;img src=&quot;/images/gradCAM/gradCAMGuided582.png&quot; alt=&quot;Grad-CAM Implementation Pic&quot; title=&quot;Grad-CAM Implementation Pic&quot; /&gt;&lt;/p&gt;
 
-&lt;p&gt;Looking at the “Guided” (I’m using quotes because it is technically not guided backprop just the gradient of the input, explained more above) Grad-CAM output, it is clear how that can be mistaken as a 2. The heatmap also shows that the model isn’t paying attention to the bottom of the digit to classify it as a 2.&lt;/p&gt;
+&lt;p&gt;Looking at the “Guided” (I’m using quotes because it is technically not guided backprop just the gradient of the input, explained more above) Grad-CAM output, it is clear how that can be mistaken as a 2. The heatmap also shows that the model isn’t paying attention to the bottom of the digit much to classify it as a 2.&lt;/p&gt;
 
 &lt;p&gt;For the weakly supervised object localization it is clear that you could draw a relatively suitable bounding box to localize the character. This worked better for some input images than other in my implementation. This 4 is an example of a digit for which it worked pretty well.&lt;/p&gt;
 
@@ -339,19 +535,17 @@
 
 &lt;p&gt;&lt;img src=&quot;/images/gradCAM/gradCAMGuided19.png&quot; alt=&quot;Grad-CAM Implementation Pic&quot; title=&quot;Grad-CAM Implementation Pic&quot; /&gt;&lt;/p&gt;
 
-&lt;p&gt;The CAM model didn’t look at the base of the 4 as much, but the Grad-CAM model clearly does, which could be an explanation for why it got this classification correct.&lt;/p&gt;
-
 &lt;p&gt;One cool thing to note is how the Grad-CAM model had better accuracy on the test data than the CAM model. This is likely due to the greater freedom for model choice that Grad-CAM allows. Of course, this is not very rigorous and I could have made my CAM model much better than my simple Grad-CAM model probably by maybe adding more conv layers or trying some regularization techniques or something, but the point is that even from this simple toy example, we can see that Grad-CAM does a better job of beating the accuracy vs. interpretability trade-off.&lt;/p&gt;
 
-&lt;h3 id=&quot;areas-of-improvement-1&quot;&gt;Areas of Improvement&lt;/h3&gt;
+&lt;h2 id=&quot;areas-of-improvement-1&quot;&gt;Areas of Improvement&lt;/h2&gt;
 
 &lt;p&gt;Even though Grad-CAM fixes some issues that CAM had, it is still not perfect. Heatmaps are a step in the right direction, but still may fail to explain complex relationships in images. There are &lt;a href=&quot;https://openaccess.thecvf.com/content/CVPR2021/papers/Ge_A_Peek_Into_the_Reasoning_of_Neural_Networks_Interpreting_With_CVPR_2021_paper.pdf&quot;&gt;more modern techniques&lt;/a&gt; that can do a better job of this. Also Grad-CAM is only for computer vision, there are many other areas of AI that also need interpretation.&lt;/p&gt;
 
-&lt;h2 id=&quot;conclusion&quot;&gt;Conclusion&lt;/h2&gt;
+&lt;h1 id=&quot;conclusion&quot;&gt;Conclusion&lt;/h1&gt;
 
 &lt;p&gt;To me, the simplicity of Grad-CAM is really exciting. I find interpretability as a whole a really fascinating and seemingly important field and I can’t wait to read and write more about it in the future 🤓.&lt;/p&gt;
 
-&lt;h2 id=&quot;references&quot;&gt;References:&lt;/h2&gt;
+&lt;h1 id=&quot;references&quot;&gt;References:&lt;/h1&gt;
 
 &lt;ul&gt;
   &lt;li&gt;&lt;a href=&quot;https://arxiv.org/pdf/1512.04150.pdf&quot;&gt;CAM&lt;/a&gt;&lt;/li&gt;

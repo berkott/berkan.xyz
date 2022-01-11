@@ -22,10 +22,14 @@ Awesome Papers I've Read:
 - [You Only Look Once: Unified, Real-Time Object Detection](https://arxiv.org/abs/1506.02640)
 - [Building Machines That Learn and Think Like People](https://arxiv.org/abs/1604.00289)
 - [Grad-CAM](https://arxiv.org/pdf/1610.02391.pdf)
+- [CAM](https://arxiv.org/pdf/1512.04150.pdf)
+- [Neural Machine Translation by Jointly Learning to Align and Translate](https://arxiv.org/pdf/1409.0473.pdf)
 
 Quick-ish Reference Materials:
 - [My Git Guide](https://technotitans.slab.com/posts/git-guide-z98a7s1b)
 - [Someone else's Git Guide](http://rogerdudler.github.io/git-guide/)
+- [LaTeX Reference](https://alozano.clas.uconn.edu/wp-content/uploads/sites/490/2020/08/latexcheatsheet.pdf)
+- [Jekyll Markdown Reference](https://itopaloglu83.github.io/Jekyll-Markdown-Cheat-Sheet/)
 - [State of AI](https://www.stateof.ai/)
 
 Good Technical Books:
