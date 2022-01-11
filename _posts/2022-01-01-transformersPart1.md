@@ -1,7 +1,7 @@
 ---
 title: 'Understanding Transformers Part 1: Attention Mechanisms'
 date: 2022-01-10
-permalink: /posts/2013/08/transformersPart1/
+permalink: /posts/2022/01/transformersPart1/
 excerpt: "Part one in a series of posts about understanding transformers. This post focuses on attention mechanisms."
 tags:
   - Artificial Intelligence
@@ -170,7 +170,7 @@ __RNNsearch-50 Translated Back Using Google Translate:__
 
 Impressive huh?
 
-The paper also shows these plots showing the $$\alpha_{ij}$$ of the $$j$$th source word for the $$i$$th target word. You can see how the model learned to pay attention to things that are intuitive for people as well. "Destruction" and "La destruction" go together but "Syria" isn't important for that translation.
+The paper also shows these plots showing the $$\alpha_{ij}$$ of the $$j$$th source word for the $$i$$th target word. You can see how the model learned to pay attention to things that are intuitive for people as well. "Destruction" and "La destruction" go together but "Syria" for example isn't important for that translation.
 
 ![Attention Mechanism Alignments](/images/transformers1/attentionMechanismAlignments.png "Attention Mechanism Alignments")
 
