@@ -21,16 +21,16 @@ Already, FSL models have incredible real world applications for low-data drug di
 
 
 __References:__
-- Ozsubasi, W. (2020, November 1). Few-Shot Learning (FSL): What it is & its Applications. Retrieved July 16, 2021, from https://research.aimultiple.com/few-shot-learning/
-- ILSVRC2017. (n.d.). Retrieved July 16, 2021, from https://image-net.org/challenges/LSVRC/2017/browse-det-synsets.php
-- Wang, Y., Yao, Q., Kwok, J., & Ni, L. M. (2020). Generalizing from a few examples: A survey on few-shot learning. ArXiv:1904.05046 [Cs]. http://arxiv.org/abs/1904.05046
-- Shyam, P., Gupta, S., & Dukkipati, A. (2017). Attentive recurrent comparators. ArXiv:1703.00767 [Cs]. http://arxiv.org/abs/1703.00767
-- Tsai, Y.-H. H., & Salakhutdinov, R. (2018). Improving one-shot learning through fusing side information. ArXiv:1710.08347 [Cs]. http://arxiv.org/abs/1710.08347
-- Jia, Y., Shelhamer, E., Donahue, J., Karayev, S., Long, J., Girshick, R., Guadarrama, S., & Darrell, T. (2014). Caffe: Convolutional architecture for fast feature embedding. ArXiv:1408.5093 [Cs]. http://arxiv.org/abs/1408.5093
-- Brown, T. B., Mann, B., Ryder, N., Subbiah, M., Kaplan, J., Dhariwal, P., Neelakantan, A., Shyam, P., Sastry, G., Askell, A., Agarwal, S., Herbert-Voss, A., Krueger, G., Henighan, T., Child, R., Ramesh, A., Ziegler, D. M., Wu, J., Winter, C., … Amodei, D. (2020). Language models are few-shot learners. ArXiv:2005.14165 [Cs]. http://arxiv.org/abs/2005.14165
-- Vaswani, A., Shazeer, N., Parmar, N., Uszkoreit, J., Jones, L., Gomez, A. N., Kaiser, L., & Polosukhin, I. (2017). Attention is all you need. ArXiv:1706.03762 [Cs]. http://arxiv.org/abs/1706.03762
-- Hospedales, T., Antoniou, A., Micaelli, P., & Storkey, A. (2020). Meta-learning in neural networks: A survey. ArXiv:2004.05439 [Cs, Stat]. http://arxiv.org/abs/2004.05439
-- Finn, C., Abbeel, P., & Levine, S. (2017). Model-agnostic meta-learning for fast adaptation of deep networks. ArXiv:1703.03400 [Cs]. http://arxiv.org/abs/1703.03400
-- Hao, K. (2020, November 3). AI pioneer Geoff Hinton: “Deep learning is going to be able to do everything.” Retrieved July 16, 2021, from https://www.technologyreview.com/2020/11/03/1011616/ai-godfather-geoffrey-hinton-deep-learning-will-do-everything/
-- Altae-Tran, H., Ramsundar, B., Pappu, A. S., & Pande, V. (2017). Low data drug discovery with one-shot learning. ACS Central Science, 3(4), 283–293. https://doi.org/10.1021/acscentsci.6b00367
-- Arik, S. O., Chen, J., Peng, K., Ping, W., & Zhou, Y. (2018). Neural voice cloning with a few samples. ArXiv:1802.06006 [Cs, Eess]. http://arxiv.org/abs/1802.06006
+1. Ozsubasi, W. (2020, November 1). Few-Shot Learning (FSL): What it is & its Applications. Retrieved July 16, 2021, from https://research.aimultiple.com/few-shot-learning/
+2. ILSVRC2017. (n.d.). Retrieved July 16, 2021, from https://image-net.org/challenges/LSVRC/2017/browse-det-synsets.php
+3. Wang, Y., Yao, Q., Kwok, J., & Ni, L. M. (2020). Generalizing from a few examples: A survey on few-shot learning. ArXiv:1904.05046 [Cs]. http://arxiv.org/abs/1904.05046
+4. Shyam, P., Gupta, S., & Dukkipati, A. (2017). Attentive recurrent comparators. ArXiv:1703.00767 [Cs]. http://arxiv.org/abs/1703.00767
+5. Tsai, Y.-H. H., & Salakhutdinov, R. (2018). Improving one-shot learning through fusing side information. ArXiv:1710.08347 [Cs]. http://arxiv.org/abs/1710.08347
+6. Jia, Y., Shelhamer, E., Donahue, J., Karayev, S., Long, J., Girshick, R., Guadarrama, S., & Darrell, T. (2014). Caffe: Convolutional architecture for fast feature embedding. ArXiv:1408.5093 [Cs]. http://arxiv.org/abs/1408.5093
+7. Brown, T. B., Mann, B., Ryder, N., Subbiah, M., Kaplan, J., Dhariwal, P., Neelakantan, A., Shyam, P., Sastry, G., Askell, A., Agarwal, S., Herbert-Voss, A., Krueger, G., Henighan, T., Child, R., Ramesh, A., Ziegler, D. M., Wu, J., Winter, C., … Amodei, D. (2020). Language models are few-shot learners. ArXiv:2005.14165 [Cs]. http://arxiv.org/abs/2005.14165
+8. Vaswani, A., Shazeer, N., Parmar, N., Uszkoreit, J., Jones, L., Gomez, A. N., Kaiser, L., & Polosukhin, I. (2017). Attention is all you need. ArXiv:1706.03762 [Cs]. http://arxiv.org/abs/1706.03762
+9. Hospedales, T., Antoniou, A., Micaelli, P., & Storkey, A. (2020). Meta-learning in neural networks: A survey. ArXiv:2004.05439 [Cs, Stat]. http://arxiv.org/abs/2004.05439
+10. Finn, C., Abbeel, P., & Levine, S. (2017). Model-agnostic meta-learning for fast adaptation of deep networks. ArXiv:1703.03400 [Cs]. http://arxiv.org/abs/1703.03400
+11. Hao, K. (2020, November 3). AI pioneer Geoff Hinton: “Deep learning is going to be able to do everything.” Retrieved July 16, 2021, from https://www.technologyreview.com/2020/11/03/1011616/ai-godfather-geoffrey-hinton-deep-learning-will-do-everything/
+12. Altae-Tran, H., Ramsundar, B., Pappu, A. S., & Pande, V. (2017). Low data drug discovery with one-shot learning. ACS Central Science, 3(4), 283–293. https://doi.org/10.1021/acscentsci.6b00367
+13. Arik, S. O., Chen, J., Peng, K., Ping, W., & Zhou, Y. (2018). Neural voice cloning with a few samples. ArXiv:1802.06006 [Cs, Eess]. http://arxiv.org/abs/1802.06006

@@ -24,6 +24,7 @@ Awesome Papers I've Read:
 - [Grad-CAM](https://arxiv.org/pdf/1610.02391.pdf)
 - [CAM](https://arxiv.org/pdf/1512.04150.pdf)
 - [Neural Machine Translation by Jointly Learning to Align and Translate](https://arxiv.org/pdf/1409.0473.pdf)
+- [A Survey of Unsupervised Domain Adaptation for Visual Recognition](https://arxiv.org/pdf/2112.06745.pdf)
 
 Quick-ish Reference Materials:
 - [My Git Guide](https://technotitans.slab.com/posts/git-guide-z98a7s1b)

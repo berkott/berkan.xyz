@@ -288,7 +288,7 @@
 
 <h1 id="neural-machine-translation">Neural Machine Translation</h1>
 
-<p>Neural machine translation aims to take an input sentence comprised of the input words \(\mathbf{x} = (x_1, \ldots, x_{T_x})\) and translate it into an output sentence \(\mathbf{y} = (y_1, \ldots, y_{T_y})\) in a different language, where  using only a single (<em>They say single in the paper but technically their model comprises of multiple neural networks as you will soon. I guess sometimes these things are just a little vague, but I think you get the idea</em>), pretty large, neural network. I’m now going to introduce a recurring translation example used in the paper.</p>
+<p>Neural machine translation aims to take an input sentence comprised of the input words \(\mathbf{x} = (x_1, \ldots, x_{T_x})\) and translate it into an output sentence \(\mathbf{y} = (y_1, \ldots, y_{T_y})\) in a different language, where  using only a single (<em>They say single in the paper but technically their model comprises of multiple neural networks as you will soon see. I guess sometimes these things are just a little vague, but I think you get the idea</em>), pretty large, neural network. I’m now going to introduce a recurring translation example used in the paper.</p>
 
 <p><strong>English Input Sentence:</strong></p>
 <blockquote>
@@ -302,7 +302,7 @@
 
 <p><em>Warning:</em> The accents on top of some of the letters have disappeared during the copy/paste.</p>
 
-<p>Now I don’t know French. So I’m just going to trust some of the authors analysis on the accuracy of their model’s translations. But it would be useful, if I were maybe implementing this myself or just to rapidly test, for there to be a way to automatically gauge how good a generated translation is. Luckily, there is something for this, called the <a href="https://aclanthology.org/P02-1040.pdf">BLEU Score</a>!</p>
+<p>Now I don’t know French. So I’m just going to trust some of the authors analysis on the accuracy of their model’s translations. However, if I were trying to implement this myself on a lot of data, it would be really useful to automatically gauge how good a generated translation is. Luckily, there is something for this, called the <a href="https://aclanthology.org/P02-1040.pdf">BLEU Score</a>!</p>
 
 <h2 id="bleu-score">BLEU Score</h2>
 
@@ -347,7 +347,7 @@
   <li>\(Count\) is just the number of times an \(n \text{-} gram\) is seen in the candidate translation.</li>
 </ul>
 
-<p>Ok, I know I just threw a lot of math at you and you might be a bit confused. Basically, we are going over different values of \(n\) from 1 to about 4, and (in the case where we are using our simple, uniform, definition for \(w_n\)) taking the average of the number of those \(n \text{-} grams\) are seen in the candidate translation and the reference translations, over the number of those \(n \text{-} grams\) in the candidate translation. Finally, we have this brevity penalty that penalizes translations that are very short. Overal this outputs a number from 0 to 1, and the higher the number is the more it is like the reference translations. This is a bit of an over simplification, but this is the basic idea, so if none of the math made sense and you just understood this, you should be ok for now.</p>
+<p>I just want to take a second to sum this all up a little more intuitively. Basically, we are going over different values of \(n\) from 1 to about 4, and (in the case where we are using our simple, uniform, definition for \(w_n\)) taking the average of the number of those \(n \text{-} grams\) seen in the candidate translation and the reference translations, over the number of those \(n \text{-} grams\) in the candidate translation. Finally, we have this brevity penalty that penalizes translations that are very short. Overal this outputs a number from 0 to 1, and the higher the number is the more it is like the reference translations. This is a bit of an over simplification, but it gets the idea across.</p>
 
 <p>Now that we have some background on neural machine translation and the BLEU score, we are ready to tackle attention! We will start by understanding previous approaches to neural machine translation, and then see how the attention mechanism makes it better.</p>
 
@@ -367,7 +367,7 @@
 
 <h2 id="decoder">Decoder</h2>
 
-<p>The decoder aims to predict the next word \(y_{t'}\) given the context vector \(c\) and the previously predicted words \(\{y_1, \ldots, y_{t'-1} \}\). The decoder basically defines a probability over a translation \(\mathbf{y}\) that goes as follows, decomposing the joint probability into ordered conditional:</p>
+<p>The decoder aims to predict the next word \(y_{t'}\) given the context vector \(c\) and the previously predicted words \(\{y_1, \ldots, y_{t'-1} \}\). The decoder basically defines a probability over a translation \(\mathbf{y}\) that goes as follows, decomposing the joint probability into ordered conditional probabilities:</p>
 
 \[p(\mathbf{y}) = \prod_{t=1}^{T} p(y_t | \{ y_1 \ldots, y_{t-1}\}, c)\]
 
@@ -421,7 +421,7 @@
 
 <p>The encoder is responsible for creating these annotations \((h_1, \ldots, h_{T_x})\) and does so using a <a href="https://ieeexplore.ieee.org/document/650093">bidirectional RNN</a> (BiRNN). The reason a regular RNN is not used is because a regular RNN only has information about the previous words, which wouldn’t allow annotations to have context that comes later in the sentence that could be important to the meaning of the current part of the sentence.</p>
 
-<p>The BiRNN consists of a forward and backward RNNs that read the sentences in regular and reverse order respectively and calculate the hidden states \((\overrightarrow{h_1}, \ldots, \overrightarrow{h_{T_x}})\) and \((\overleftarrow{h_1}, \ldots, \overleftarrow{h_{T_x}})\) respectively. These are concatenated s.t. the hidden state \(h_j\) corresponding to word \(x_j\) is \(\left [ \overrightarrow{h_j^T} ; \overleftarrow{h_j^T} \right ]\). This way \(h_j\) contains context from before and after in the sentence, mainly focused near the \(j\)th word because of RNNs tendency to represent recent inputs better.</p>
+<p>The BiRNN consists of a forward and backward RNNs that read the sentences in regular and reverse order respectively and calculate the hidden states \((\overrightarrow{h_1}, \ldots, \overrightarrow{h_{T_x}})\) and \((\overleftarrow{h_1}, \ldots, \overleftarrow{h_{T_x}})\) respectively. The arrows are just used to represent the forward and backward RNN hidden states. These are concatenated such that the hidden state \(h_j\) corresponding to word \(x_j\) is \(\left [ \overrightarrow{h_j^T} ; \overleftarrow{h_j^T} \right ]\). This way \(h_j\) contains context from before and after in the sentence, mainly focused near the \(j\)th word because of RNNs tendency to represent recent inputs better.</p>
 
 <h1 id="performance">Performance</h1>
 
