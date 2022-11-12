@@ -40,7 +40,6 @@ Good Technical Books:
 Cool Ideas:
 - [Focusing](https://focusing.org/felt-sense/learning-focusing)
 - [Less Wrong](https://www.lesswrong.com/)
-- [80,000 hours](https://80000hours.org/)
 - [The Egg](http://www.galactanet.com/oneoff/theegg_mod.html)
 
 Great YouTube Channels:
