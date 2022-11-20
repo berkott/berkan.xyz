@@ -14,3 +14,6 @@ Welcome to my website! I use this space to write fun blogs, list some cool resou
 - I'm currently a student at Columbia University studying computer science
 - Interned as a software engineer at State Farm
 - Interned as a full stack/machine learning developer at various start-ups
+
+## Life Philosophy
+Love and don't take things too seriously.
