@@ -25,6 +25,24 @@ Awesome Papers I've Read:
 - [CAM](https://arxiv.org/pdf/1512.04150.pdf)
 - [Neural Machine Translation by Jointly Learning to Align and Translate](https://arxiv.org/pdf/1409.0473.pdf)
 - [A Survey of Unsupervised Domain Adaptation for Visual Recognition](https://arxiv.org/pdf/2112.06745.pdf)
+- [Universal Domain Adaptation through Self-Supervision](https://arxiv.org/pdf/2002.07953.pdf)
+- https://arxiv.org/pdf/1906.01820.pdf
+- https://arxiv.org/pdf/1706.03762.pdf
+https://arxiv.org/pdf/2202.05262.pdf
+https://transformer-circuits.pub/2021/framework/index.html
+https://transformer-circuits.pub/2022/in-context-learning-and-induction-heads/index.html
+https://arxiv.org/pdf/2105.14111.pdf
+https://distill.pub/2020/circuits/
+https://arxiv.org/pdf/2001.08361.pdf
+https://arxiv.org/pdf/1805.00899.pdf
+Resnet
+FasterRCNN
+Other Domain adaptation papers...
+AGI Safety from first principles
+https://arxiv.org/pdf/2103.00020.pdf
+https://arxiv.org/pdf/2204.00598.pdf
+https://proceedings.neurips.cc/paper/2019/file/2f4fe03d77724a7217006e5d16728874-Paper.pdf
+
 
 Quick-ish Reference Materials:
 - [My Git Guide](https://technotitans.slab.com/posts/git-guide-z98a7s1b)
@@ -32,6 +50,8 @@ Quick-ish Reference Materials:
 - [LaTeX Reference](https://alozano.clas.uconn.edu/wp-content/uploads/sites/490/2020/08/latexcheatsheet.pdf)
 - [Jekyll Markdown Reference](https://itopaloglu83.github.io/Jekyll-Markdown-Cheat-Sheet/)
 - [State of AI](https://www.stateof.ai/)
+https://stackoverflow.com/questions/52248505/how-to-locally-develop-a-python-package
+https://deeplearning.cms.waikato.ac.nz/user-guide/class-maps/IMAGENET/
 
 Good Technical Books:
 - [Deep Learning Book](https://www.deeplearningbook.org/)

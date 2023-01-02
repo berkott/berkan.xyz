@@ -2,16 +2,18 @@
 title: 'Understanding Transformers Part 1: Attention Mechanisms'
 date: 2022-01-10
 permalink: /posts/2022/01/transformersPart1/
-excerpt: "Part one in a series of posts about understanding transformers. This post focuses on attention mechanisms."
+excerpt: "Part one in a series of posts about understanding Transformers. This post focuses on attention mechanisms."
 tags:
   - Artificial Intelligence
 ---
 
 *__WARNING:__ This post assumes you have a basic understanding of neural networks and specifically Recurrent Neural Networks (RNNs).*
 
-There are sometimes things in my life, that I've heard about many times, but never totally understood. Transformers are one of those things. That's why, in this series of posts, I'm going to finally get a better understanding of transformers, and I invite you to come along this journey with me. I'm going to start with the building blocks of transformers, namely attention mechanisms. I'm going to base most of this post on the paper [Neural Machine Translation by Jointly Learning to Align and Translate](https://arxiv.org/pdf/1409.0473.pdf), which first introduced attention mechanisms in 2014 (the year Germany won the world cup 😃⚽️).
+There are some things in my life, that I've heard about many times, but never really understood. Transformers are one of those things. That's why, in this series of posts, I'm going to give all the building blocks that took me from a decent understanding of neural networks and RNNs but no understanding of Transformers, to a basic technical understanding of Transformers. I'm going to start with the building blocks of Transformers, namely attention mechanisms. I'm going to base most of this post on the paper [Neural Machine Translation by Jointly Learning to Align and Translate](https://arxiv.org/pdf/1409.0473.pdf), which first introduced attention mechanisms in 2014 (the year Germany won the world cup 😃⚽️).
 
-I have not yet implemented this paper, but I found this [good implementation](https://github.com/bentrevett/pytorch-seq2seq/blob/master/3%20-%20Neural%20Machine%20Translation%20by%20Jointly%20Learning%20to%20Align%20and%20Translate.ipynb) online. However, I might come back to this post and add my own implementation 🙃.
+I have not yet implemented this paper, but I found this [good PyTorch implementation](https://github.com/bentrevett/pytorch-seq2seq/blob/master/3%20-%20Neural%20Machine%20Translation%20by%20Jointly%20Learning%20to%20Align%20and%20Translate.ipynb) online. I might come back to this post and add my own implementation 🙃.
+
+I want to start by giving relevant background to the problem this paper aims to address.
 
 # Neural Machine Translation
 
@@ -70,7 +72,9 @@ Now that we have some background on neural machine translation and the BLEU scor
 
 # Previous Approach
 
-The previous approach mentioned in the paper is called RNN Encoder-Decoder, and was proposed by [Cho et al.](https://arxiv.org/pdf/1406.1078.pdf) and [Sutskever et al.](https://arxiv.org/pdf/1409.3215.pdf). 
+The previous approach mentioned in the paper is called [RNN Encoder-Decoder](https://machinelearningmastery.com/encoder-decoder-recurrent-neural-network-models-neural-machine-translation/), and was proposed by [Cho et al.](https://arxiv.org/pdf/1406.1078.pdf) and [Sutskever et al.](https://arxiv.org/pdf/1409.3215.pdf). 
+
+![RNN Encoder-Decoder](/images/transformers1/encoderDecoder.png "RNN Encoder-Decoder")
 
 ## Encoder
 
@@ -102,7 +106,7 @@ The biggest problem that the authors mention with this model is the fact that it
 
 The new mechanism that they claim learns to align and translate uses the attention mechanism and looks as follows:
 
-![Attention Mechanism](/images/transformers1/attentionMechanism.png "Attention Mechanism")
+![Attention Mechanism](/images/transformers1/attentionMechanismPersonalDiagram.png "Attention Mechanism")
 
 ## Decoder
 
@@ -110,13 +114,13 @@ Instead of defining each conditional probability as in Eq. 9, we can define them
 
 $$p(y_i | \{ y_1 \ldots, y_{i-1}\}, \mathbf{x}) = g(y_{i-1}, s_i, c_i)$$
 
-$$g$$ is just some RNN model again.
+$$g$$ is just some RNN model again. To output a word $$y_i$$, you just need to sample from the conditional distribution.
 
 $$ s_i = f(s_{i-1}, y_{i-1}, c_i) $$
 
-$$s_i$$ is just the hidden state at time $$i$$. 
+$$s_i$$ is just the hidden state at time $$i$$, and $$f$$ is another part of whatever RNN architecture is being used.
 
-*Note how the $$c$$ term now has a subscript!* This is because the context vector $$c_i$$ term now depends on a sequence of annotations $$(h_1, \ldots, h_{T_x})$$ which the encoder creates. $$c_i$$ is a weighted sum of these annotations.
+*Note how the $$c$$ term (context vector) now has a subscript!* This is because the context vector $$c_i$$ term now depends on a sequence of annotations $$(h_1, \ldots, h_{T_x})$$ which the encoder creates. $$c_i$$ is a weighted sum of these annotations.
 
 $$c_i = \sum_{j=1}^{T_x} \alpha_{ij} h_j$$
 
@@ -128,7 +132,7 @@ $$e_{ij} = a(s_{i-1}, h_j)$$
 
 $$a$$ is an alignment model which scores how well inputs around position j in the candidate sentence and the output translation at i match. Here $$a$$ is just a feedforward neural network that is trained jointly with everything else.
 
-While this may all look scary at first, all that's really going on is that we are using $$c_i$$ for the $$i$$th output word instead of $$c$$. And we are calculating $$c_i$$ as a weighted sum of these weird annotations $$h$$ that the encoder creates. $$h_j$$ contains information about the whole input sentence with a focus on the parts surrounding the $$j$$th word.
+While this may all look scary at first, all that's really going on is that we are using $$c_i$$ for the $$i$$th output word instead of $$c$$. And we are calculating $$c_i$$ as a weighted sum of these annotations $$h$$ that the encoder creates. $$h_j$$ contains information about the whole input sentence with a focus on the parts surrounding the $$j$$th word.
 
 __Pay attention to the attention mechanism here 😉!!__ These weights $$\alpha_{ij}$$ tell the model what parts of the sentence to pay attention to when predicting the $$i$$th word. The alignment model figures out what parts of the sentence to pay attention to based on the previous hidden state $$s_{i-1}$$. 
 
@@ -176,9 +180,10 @@ The paper also shows these plots showing the $$\alpha_{ij}$$ of the $$j$$th sour
 
 # Conclusion
 
-I think attention is really cool. The clever way the alignment model is tied into the RNNs and that it actually works to create much better translations is really impressive. Also the way it's at least somewhat more biologically plausible is also exciting (this is a fun topic). The next post will continue to lay the groundwork for transformers. Stay tuned 😎. 
+Attention is really cool and has revolutionalized much of AI. This post has reviewed the paper that first introduced attention, and introduced what is today known as additive attention. The clever way the alignment model is tied into the RNNs and to avoid the problems with fixed length context vectors and improve performance for longer input sentences is really impressive. Also the way attention is at least somewhat more biologically plausible than creating fixed length context vectors is exciting. The next post is a look at the technical details of Transformers. 
 
 # References:
 - [Neural Machine Translation by Jointly Learning to Align and Translate](https://arxiv.org/pdf/1409.0473.pdf)
 - [BLEU Score](https://aclanthology.org/P02-1040.pdf)
 - [Someone Else's Implementation](https://github.com/bentrevett/pytorch-seq2seq/blob/master/3%20-%20Neural%20Machine%20Translation%20by%20Jointly%20Learning%20to%20Align%20and%20Translate.ipynb)
+- [Slightly less mathmatical but prettier explanation](https://distill.pub/2016/augmented-rnns/#attentional-interfaces)
