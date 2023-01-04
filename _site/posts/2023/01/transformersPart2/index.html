@@ -32,8 +32,8 @@
 <meta property="og:title" content="Understanding Transformers Part 2: Technical Details of Transformers">
 
 
-  <link rel="canonical" href="http://localhost:4000/posts/2022/05/transformersPart2/">
-  <meta property="og:url" content="http://localhost:4000/posts/2022/05/transformersPart2/">
+  <link rel="canonical" href="http://localhost:4000/posts/2023/01/transformersPart2/">
+  <meta property="og:url" content="http://localhost:4000/posts/2023/01/transformersPart2/">
 
 
 
@@ -52,7 +52,7 @@
 
 
   <meta property="og:type" content="article">
-  <meta property="article:published_time" content="2022-05-26T00:00:00-07:00">
+  <meta property="article:published_time" content="2023-01-04T00:00:00-08:00">
 
 
 
@@ -180,7 +180,7 @@
   <article class="page" itemscope itemtype="http://schema.org/CreativeWork">
     <meta itemprop="headline" content="Understanding Transformers Part 2: Technical Details of Transformers">
     <meta itemprop="description" content="Part two post in a series about understanding Transformers. This post focuses on the the technical details of Transformers.">
-    <meta itemprop="datePublished" content="May 26, 2022">
+    <meta itemprop="datePublished" content="January 04, 2023">
     
 
     <div class="page__inner-wrap">
@@ -193,14 +193,14 @@
 
 
   
-	  29 minute read
+	  36 minute read
 	
 </p>
           
         
         
         
-          <p class="page__date"><strong><i class="fa fa-fw fa-calendar" aria-hidden="true"></i> Published:</strong> <time datetime="2022-05-26T00:00:00-07:00">May 26, 2022</time></p>
+          <p class="page__date"><strong><i class="fa fa-fw fa-calendar" aria-hidden="true"></i> Published:</strong> <time datetime="2023-01-04T00:00:00-08:00">January 04, 2023</time></p>
         
         
              
@@ -222,35 +222,41 @@
 <p>Transfomers were originally created as transduction models in NLP. There are <a href="https://machinelearningmastery.com/transduction-in-machine-learning/">several definitions</a> of transduction models, but the definition that seems most in line with how the paper uses it is “<a href="Learning to Transduce with Unbounded Memory">learning to convert one string into another</a>”. Neural machine translation (explained in the <a href="https://berkan.xyz/posts/2022/01/transformersPart1/">last post</a>) is one of many problems that a transduction model can be used for.</p>
 
 <h1 id="problems-with-previous-transduction-models">Problems with Previous Transduction Models</h1>
-<p>Before 2017, when Transformers were introduced, the state of the art (SOTA) in transduction problems were mostly LSTMs and GRUs and their variants. The problems with these models though is that they are recursive in nature. Recurrent models require the previous hidden state in order to compute the current hidden state, meaning they are sequential in nature. This reduces computational efficiency because it prevents parallelization within training examples, which is especially important with longer input sequence lengths (training on longer articles and documents).</p>
+<p>Before 2017, when Transformers were introduced, the state of the art (SOTA) in transduction problems were mostly <a href="https://colah.github.io/posts/2015-08-Understanding-LSTMs/">LSTMs</a>, GRUs, and their variants. The problems with these models is they are recursive in nature. Recurrent models require the previous hidden state in order to compute the current hidden state, meaning they are sequential. This reduces computational efficiency because it prevents parallelization within training examples, which is especially important for training with longer input sequence lengths (training on longer articles and documents).</p>
 
-<p>There is a body of existing literature which achieves parallelization though the use of convolutional neural networks (CNNs), yet these models still struggle at learning dependencies between words that are far apart, because the number of operations required to relate words that are far apart increases with their distance. Transformers are the first transduction architecture that achieves parallelization within training examples (without convolutions or recurrence, by using attention for everything) and maintains a constant number of operations to relate words of any distance. As we will soon see, this allows transformers to achieve SOTA performance in transduction tasks while requiring less training time than previous models.</p>
+<p>There is a body of existing literature which achieves parallelization though the use of convolutional neural networks (CNNs), yet these models still struggle at learning dependencies between words that are far apart, because the number of operations required to relate words that are far apart increases with their distance. Transformers are the first transduction architecture that achieves parallelization within training examples (without convolutions or recurrence, by using attention for everything) and maintains a constant number of operations to relate words of any distance. As we will soon see, this allows transformers to achieve SOTA performance in transduction tasks with less training time than previous models.</p>
 
 <h1 id="transformers-architecture-explained">Transformers Architecture Explained</h1>
-<p>Now for the fun part! I’m going to explain Transformers by going step-by-step through a forwards pass. I will frequently reference this very good diagram from the paper:</p>
+<p>Now for the fun part! I’m going to explain transformers by going step-by-step through a forwards pass. I will frequently reference this diagram from the paper:</p>
 
 <p><img src="/images/transformers2/transformerArchitecture.png" alt="Transformer Architecture" title="Transformer Architecture" /></p>
 
-<p>The model resembles the encoder-decoder structure of previous transduction models (see part 1 for details).</p>
+<p>Additionally, I have created my own diagram which explains things a bit more throughly. The diagram is quite big, so I recommend going to <a href="https://berkan.xyz/files/transformersDiagram.pdf">this link</a> to see the full pdf or opening the below image in a new tab. I have copy pasted bits of the diagram into the relevant sections, but you can also view the full diagram here:</p>
 
-<blockquote style="background-color: #ecfeec; border-color: #528852; font-style: inherit;">
-In these green blockquotes I'm going to run through an example of translating the sentence "Bobby likes blackberries." to German, "Bobby mag Brombeeren." 
-</blockquote>
+<p><img src="/images/transformers2/transformersDiagram.png" alt="Transformer Diagram" title="Transformer Diagram" /></p>
+
+<p>The model resembles the encoder-decoder structure of previous transduction models (see part 1 for details).</p>
 
 <h1 id="mathematical-notation">Mathematical Notation</h1>
 <p>\(\textbf{x} \in \mathbb{R}^d\) will denote a column vector comprising of \(x_1, x_2, \ldots, x_d\). I will often use a data matrix denoted as \(X \in \mathbb{R}^{n \times d}\), where the \(i\)th row corresponds to the row vector \(\textbf{x}_i^\top \in \mathbb{R}^d\). Therefore, by writing \(\textbf{x}_i\) I am refering to a column vector of the \(i\)th row of \(X\).</p>
 
-<p>\(X \in \mathbb{R}^{n \times C}\) and the corresponding \(\textbf{x}_i\) vectors will represent the input words, \(H \in \mathbb{R}^{n \times d_{\text{model}}}\) and the corresponding \(\textbf{h}_i\) vectors will represent the hidden state, and \(\textbf{y} \in \mathbb{R}^C\) will represent the output logits.</p>
+<p>\(X \in \mathbb{R}^{n \times C}\) and the corresponding \(\textbf{x}_i\) vectors will represent the input words, \(H \in \mathbb{R}^{n \times d_{\text{model}}}\) and the corresponding \(\textbf{h}_i\) vectors will represent the hidden state, and \(\textbf{y}_i \in \mathbb{R}^C\) will represent the output logits for the \(i\)th output word.</p>
 
 <h1 id="pre-encoder">Pre Encoder</h1>
 <blockquote style="background-color: #ecfeec; border-color: #528852; font-style: inherit;">
+I'm going to use these green blockquotes to show a running example for the embedding and unembedding of translating the sentence "Bobby likes blackberries." to German, "Bobby mag Brombeeren." 
+
+<br /><br />
+
 The input to our model is the text "Bobby likes blackberries."
 </blockquote>
+
+<p><img src="/images/transformers2/transformersDiagramPreEncoder.png" alt="Pre Encoder" title="Pre Encoder" /></p>
 
 <h2 id="tokenization">Tokenization</h2>
 <p>The first challenge is to convert the input string to a meaningful representation that the model can work with. The cannonical way to do this is to assign one hot vectors to your input corpus. The only question is what unit of your input vocabulary should you assign one hot vectors to? Should each character have it’s own vector? Should each word have it’s own vector?</p>
 
-<p>The original transformers paper, along with many other modern implementations, use <a href="https://arxiv.org/pdf/1508.07909.pdf">byte-pair encoding</a> (BPE) to create subword tokens that one hot vectors can be assigned to (37000 tokens for English to German in the paper). It allows for common words to have their own representation, but breaks rare words into multiple subtokens in order to include all words in the corpus without requiring an incredibly large vocabulary size. Here is how BPE works (visit <a href="https://towardsdatascience.com/byte-pair-encoding-subword-based-tokenization-algorithm-77828a70bee0">this page</a> for a more detailed walkthrough of this algorithm.):</p>
+<p>The original transformers paper, along with many other modern implementations, uses <a href="https://arxiv.org/pdf/1508.07909.pdf">byte-pair encoding</a> (BPE) to create subword tokens that can be assigned to one hot vectors (37000 tokens for English to German in the paper). It allows for common words to have their own representation, but breaks rare words into multiple subtokens in order to include all words in the corpus without an incredibly large vocabulary. Here is how BPE works (visit <a href="https://towardsdatascience.com/byte-pair-encoding-subword-based-tokenization-algorithm-77828a70bee0">this page</a> for a more detailed walkthrough of this algorithm):</p>
 
 <ol>
   <li>Split up the entire corpus into characters and add a special start of sentence token &lt;SOS&gt;, end of word token &lt;EOW&gt;, and end of sentence token &lt;EOS&gt;. This is the initial token list.</li>
@@ -261,24 +267,25 @@ The input to our model is the text "Bobby likes blackberries."
 <p>Now that we have split up the input sentence into meaningful tokens, we can create one hot vectors from these tokens. I will be using the following notation to represent one hot vectors: $\textbf{e}_i \in \mathbb{R}^C$, where $\textbf{e}_i$ is the $i$th standard basis column vector. In other words, $\textbf{e}_i$ represents a one hot vector where the value corresponding to the $i$th dimension is 1 and the rest are 0.</p>
 
 <blockquote style="background-color: #ecfeec; border-color: #528852; font-style: inherit;">
-After tokenization, our input sentence "Bobby likes blackberries." is turned into the following list of tokens ["&lt;SOS&gt;", "Bobby&lt;EOW&gt;", "likes&lt;EOW&gt;", "black", "berries&lt;EOW&gt;", "&lt;EOS&gt;"] using BPE with vocabulary size $C = 37000$. Now we can vectorize this list to get $\begin{bmatrix} \textbf{e}_{41}^\top \\ \vdots \end{bmatrix} = \begin{bmatrix} \textbf{x}_1^\top \\ \vdots \end{bmatrix} = X \in \mathbb{R}^{n \times C}$, where $\textbf{x}_i$ is the one hot vector for the $i$th input word and $n$ is called the context size. More details on the value of n can be found in the decoder section.
+After tokenization, our input sentence "Bobby likes blackberries." is turned into the following list of tokens ["&lt;SOS&gt;", "Bobby&lt;EOW&gt;", "likes&lt;EOW&gt;", "black", "berries&lt;EOW&gt;", "&lt;EOS&gt;"] using BPE with vocabulary size $C = 37000$. Now we can vectorize this list to get $\begin{bmatrix} \textbf{e}_{41}^\top \\ \vdots \end{bmatrix} = \begin{bmatrix} \textbf{x}_1^\top \\ \vdots \end{bmatrix} = X \in \mathbb{R}^{n \times C}$, where $\textbf{x}_i$ is the one hot vector for the $i$th input word and $n$ is called the context size. More details on the value of $n$ can be found in the decoder section.
 
 <br /><br />
 
-(Please note that the output tokens from BPE and your one hot vectors depend on your input and I'm just arbitrarily choosing plausible values.)
+(Please note that the output tokens are from BPE and your one hot vectors depend on your input and I'm just arbitrarily choosing plausible values.)
 </blockquote>
 
 <h2 id="word-embeddings">Word Embeddings</h2>
 
-<p>But these one hot input vectors are still very high dimensional. In fact, we can embbed these vectors into a lower dimensional vector space that is easier for the model to work with. To do this, the original transformers paper uses weight sharing of the input embeddings, output embeddings, and unembedding to get the logits, similar to what was done by <a href="https://arxiv.org/pdf/1608.05859.pdf">Press et al.</a> (see the paper for more details, I will just give a brief explanation).</p>
+<p>But these one hot input vectors are still very high dimensional. Luckily, we can embbed these vectors into a lower dimensional vector space that is easier for the model to work with. To do this, the original transformers paper uses weight sharing of the input embeddings, output embeddings, and unembedding to get the logits, similar to what was done by <a href="https://arxiv.org/pdf/1608.05859.pdf">Press et al.</a> (see the paper for more details, I will just give a brief explanation).</p>
 
-<p>A word embedding matrix \(U \in \mathbb{R}^{d_{\text{model}} \times C}\) (\(d_{\text{model}}\) is just the dimension of many word representations in the model, it is \(512\) in the original transformers paper) is used to convert \(\textbf{x}_i\) into a lower dimensional vector \(U \textbf{x}_i \in \mathbb{R}^{d_{\text{model}}}\) that matches the model size and represents the properties of the input word. For more information about word embeddings please see these resources (TODO: UPDATE THESE RESOURCES). We will use the same matrix \(U\) to unembed our hidden state to get the logits (see unembedding section). We train \(U\) along with the rest of our network (no pretrained word embeddings used).</p>
+<p>A word embedding matrix \(U \in \mathbb{R}^{d_{\text{model}} \times C}\) (\(d_{\text{model}}\) is just the dimension of many word representations in the model, it is \(512\) in the original transformers paper) is used to convert \(\textbf{x}_i\) into a lower dimensional vector \(U \textbf{x}_i \in \mathbb{R}^{d_{\text{model}}}\) that matches the model size and represents the properties of the input word. We will use the same matrix \(U\) to unembed our hidden state to get the logits (see post decoder section). We train \(U\) along with the rest of our network (no pretrained word embeddings used).</p>
 
 <blockquote style="background-color: #ecfeec; border-color: #528852; font-style: inherit;">
 Now we can take our list $\begin{bmatrix} \textbf{x}_1^\top \\ \vdots \end{bmatrix} = X$ of token one hot vectors, and compute the word embeddings $\begin{bmatrix} (U \textbf{x}_1)^\top \\ \vdots \end{bmatrix} = X U^\top \in \mathbb{R}^{n \times d_{\text{model}}}$.
 </blockquote>
 
 <h2 id="positional-encodings">Positional Encodings</h2>
+
 <p>Because transformers don’t have any sort of recurrence or convolutions, the model has no way of understanding the order of the inputs. The model needs some form of positional encoding of the input tokens. In the original transformers paper, these encodings were explicitly given and not learned (empirical evidence suggests learned embeddings didn’t perform better in general and even performed worse for input sequences longer than the ones in the training data).</p>
 
 \[PE_{(pos, 2i)} = \sin(pos/1000^{2i/d_{\text{model}}})\]
@@ -291,11 +298,13 @@ Now we can take our list $\begin{bmatrix} \textbf{x}_1^\top \\ \vdots \end{bmatr
           \vdots &amp;  &amp; \ddots
         \end{bmatrix} \in \mathbb{R}^{n \times d_{\text{model}}}\]
 
-<p>Where \(pos\) is the position of the token and \(i\) is a dimension in that token’s embedding. This is what the encodings partially look like (image taken from the illustrated transformer CITE!!!).</p>
+<p>Where \(pos\) is the position of the token and \(i\) is a dimension in that token’s embedding. This is what the encodings partially look like (image taken from the <a href="http://jalammar.github.io/illustrated-transformer/">illustrated transformer</a>).</p>
 
 <p><img src="/images/transformers2/attention-is-all-you-need-positional-encoding.png" alt="Positional Encodings" title="Positional Encodings" /></p>
 
-<p>The authors claim they used these positional encodings because they hypothesized it would allow the model to easily learn to attend by relative positions, since for any fixed offset \(k\), \(PE_{pos+k}\) can be represented as a linear function of \(PE_{pos}\). These positional encodings get summed with the original embeddings to create the input into the transformer encoder. I’m going to use \(H \in \mathbb{R}^{n \times d_{\text{model}}}\) to indicate hidden state of the model (note that the dimension of the hidden state never changes in any of the transformer layers).</p>
+<p>The authors hypothesized that these positional encodings would allow the model to easily learn to attend by relative positions, since for any fixed offset \(k\), \(PE_{pos+k}\) can be represented as a linear function of \(PE_{pos}\).</p>
+
+<p>These positional encodings get summed with the original embeddings to create the input into the transformer encoder. I’m going to use \(H \in \mathbb{R}^{n \times d_{\text{model}}}\) to indicate hidden state of the model (note that the dimension of the hidden state never changes in any of the transformer layers).</p>
 
 \[H = X U^\top + PE\]
 
@@ -303,11 +312,11 @@ Now we can take our list $\begin{bmatrix} \textbf{x}_1^\top \\ \vdots \end{bmatr
 We can represent our input sentence as $H = X U^\top + PE \in \mathbb{R}^{n \times d_{\text{model}}}$, where we have one column vector that represents for each input token and its position.
 </blockquote>
 
-<p><img src="/images/transformers2/preEncoder.png" alt="Pre Encoder" title="Pre Encoder" /></p>
-
 <h1 id="encoder">Encoder</h1>
 
-<p>Now we are finally ready to dive into the encoder part of the model. In the original paper, the encoder consists of a stack of 6 transformer layers, each with two sublayers. The first sublayer is multi-head attention, and the second is just a multilayer perceptron (MLP). Additionally, there is a residual connection between each of these layers, along with layer normalization.</p>
+<p>Now we are finally ready to dive into the encoder part of the model. In the original paper, the encoder consists of a stack of 6 transformer layers, each with two sublayers. The first sublayer is multi-head attention, and the second is just a multilayer perceptron (MLP). Additionally, there is a residual connection between each of these layers, and two layer normalizations, one after each sublayer.</p>
+
+<p><img src="/images/transformers2/transformersDiagramEncoder.png" alt="Encoder" title="Encoder" /></p>
 
 <h2 id="residual-stream">Residual Stream</h2>
 <p>A nice way to think about these models, inspired by <a href="https://transformer-circuits.pub/2021/framework/index.html#residual-comms">Elhage et al.</a>, is that we have a stream of data that is being added to by the multi-head attention and MLPs and is normalized by the layer normalizations. This stream is almost entirely linear, and it serves as an important communications channel throughout the model. The dimensions of this stream are also never changed throughout the entire model.</p>
@@ -318,7 +327,7 @@ We can represent our input sentence as $H = X U^\top + PE \in \mathbb{R}^{n \tim
 <p>We can think of the function of multi-head attention as <a href="https://transformer-circuits.pub/2021/framework/index.html#residual-comms">moving information</a> in the residual stream and applying some weight matrices. Let’s start with a single attention head:</p>
 
 <h3 id="scaled-dot-product-attention-for-one-attention-head">Scaled Dot Product Attention for One Attention Head</h3>
-<p>The transformers architecture implements scaled dot product attention. This is in contrast to additive attention, which was described in the <a href="https://berkan.xyz/posts/2022/01/transformersPart1/">last post</a>. In additive attention, we have an entire alignment model (a small MLP) that computes the logits that get fed into the softmax to determine the weighting of the values. In dot product attention, we replace that alignment model with dot products!</p>
+<p>The transformers architecture implements scaled dot product attention. This is in contrast to additive attention, which was described in the <a href="https://berkan.xyz/posts/2022/01/transformersPart1/">last post</a>. In additive attention, we have an entire alignment model (a small MLP) that computes the logits that get fed into the softmax to determine the weighting of the values. In dot product attention, we replace that alignment model with dot products and linear transformations!</p>
 
 <p>If you read the original transformers paper, you will see scaled dot product attention written in the most general form as:</p>
 
@@ -330,7 +339,7 @@ $$ \text{head}_i = \text{softmax} \big( \frac{Q_iK^\top_i}{\sqrt{d_k}} \big) V_i
 
 The $$Q_i, K_i, V_i$$, represent a query, key, and value matrix respectively that are unique for each attention head. They are simply derived from the hidden state as follows.  -->
 
-<p>Let’s ignore what the Q, K, and V matricies represent for the moment. Initially, this notation was a bit confusing for me at first because, technically the softmax function is a vector function. The key insight is that the softmax acts on the rows of the \(Q K^\top\) matrix. Things are more clear when they are written as follows:</p>
+<p>Let’s ignore what the \(Q\), \(K\), and \(V\) matricies represent for the moment. Initially, this notation was a bit confusing for me at first because, technically the softmax function is a vector function. The key insight is that the softmax acts on the rows of the \(Q K^\top\) matrix. Things are more clear when they are written as follows:</p>
 
 \[\text{Attention}(Q, K, V) = \begin{bmatrix}
   \text{softmax}\big(\frac{\textbf{q}_i^\top K^\top}{\sqrt{d_k}}\big) V \\
@@ -352,7 +361,7 @@ The $$Q_i, K_i, V_i$$, represent a query, key, and value matrix respectively tha
 
 \[\textbf{c}_i = \sum_{j=1}^{n} \text{softmax}(a(\textbf{s}_{i-1}, H))_j \textbf{h}_j = \text{softmax}(a(\textbf{s}_{i-1}, H)) H\]
 
-<p>If we take \(Q = s_{i-1}\) and \(K = V = H\) we can write:</p>
+<p>If we take \(Q = \textbf{s}_{i-1}\) and \(K = V = H\) we can write:</p>
 
 \[\textbf{c}_i = \text{softmax}(a(\textbf{s}_{i-1}, H)) H = \text{softmax}(a(\textbf{q}_i, K)) V\]
 
@@ -361,20 +370,20 @@ The $$Q_i, K_i, V_i$$, represent a query, key, and value matrix respectively tha
 <h3 id="why-scaled-dot-product-attention">Why Scaled Dot-Product Attention?</h3>
 <p>You might be wondering why this is called <strong>scaled</strong> dot-product attention. That is because of the \(\frac{1}{\sqrt{d_k}}\) term in the softmax. The paper claims this is because additive attention outperforms dot product attention for large values of \(d_k\) without the scaling. They suspect this is becuase the dot products grow large in magnitude, pushing the softmax function into regions of <a href="https://en.wikipedia.org/wiki/Vanishing_gradient_problem">extremely small gradients</a>, which slows gradient descent. Let’s disect why this is true, why do the dot products grow large in magnitude and why does this push the softmax function into regions of small gradients?</p>
 
-<p>We can think of a dot product between two vectors of dimension \(d_k\) as \(v \cdot w = \sum_i v_i w_i\). If each entry in these vectors is a random variable with mean 0 and variance 1, then because variances add, the dot product will have mean 0 and variance \(d_k\). This is of course an oversimplification because the entires of our queries and keys will not be random variables with mean 0 and variance 1, but it illustrates the fact that as \(d_k\) grows, so does the variance of our dot product. Now how does this impact the gradient of the softmax function (technically gradients are only defined for scalar functions, so from now on I will refer to the <a href="https://eli.thegreenplace.net/2016/the-softmax-function-and-its-derivative/">derivative of the softmax function</a>). Here is the derivative of the \(i\)th output with respect to the \(j\)th input.</p>
+<p>We can think of a dot product between two vectors of dimension \(d_k\) as \(\textbf{v} \cdot \textbf{w} = \sum_i \textbf{v}_i \textbf{w}_i\). If each entry in these vectors is a random variable with mean 0 and variance 1, then because variances add, the dot product will have mean 0 and variance \(d_k\). This is of course an oversimplification because the entires of our queries and keys will not be random variables with mean 0 and variance 1, but it illustrates the fact that as \(d_k\) grows, so does the variance of our dot product. Now how does this impact the gradient of the softmax function (technically gradients are only defined for scalar functions, so from now on I will refer to the <a href="https://eli.thegreenplace.net/2016/the-softmax-function-and-its-derivative/">derivative of the softmax function</a>). Here is the derivative of the \(i\)th output with respect to the \(j\)th input.</p>
 
-\[\text{softmax}(v)_i = \frac{e^{v_i}}{\sum_{k=1}^N e^{v_k}}, \ v \in \mathbb{R}^N\]
+\[\text{softmax}(\textbf{v})_i = \frac{e^{\textbf{v}_i}}{\sum_{k=1}^N e^{\textbf{v}_k}}, \ \textbf{v} \in \mathbb{R}^N\]
 
-\[\frac{\partial \text{softmax}(v)_i}{\partial v_j} = \begin{cases} 
-    \text{softmax}(v)_i (1 - \text{softmax}(v)_j) &amp; \text{if } i = j \\
-    - \text{softmax}(v)_i \text{softmax}(v)_j &amp; \text{if }  i \neq j 
+\[\frac{\partial \text{softmax}(\textbf{v})_i}{\partial \textbf{v}_j} = \begin{cases} 
+    \text{softmax}(\textbf{v})_i (1 - \text{softmax}(\textbf{v})_j) &amp; \text{if } i = j \\
+    - \text{softmax}(\textbf{v})_i \text{softmax}(\textbf{v})_j &amp; \text{if }  i \neq j 
   \end{cases}\]
 
-<p>Due to the exponent, when there is a large term in the input vector to the softmax, it ends up dominating the output probability distribution. Therefore, if we have large dot products from before, the input to the softmax is going to have some terms that are very large. In both cases for the derivative, it is likely that either \(\text{softmax}(v)_i\) or \(\text{softmax}(v)_j\) will be small, making the overall derivative also very small.</p>
+<p>Due to the exponent, when there is a large term in the input vector to the softmax, it ends up dominating the output probability distribution. Therefore, if we have large dot products from before, the input to the softmax is going to have some terms that are very large. In both cases for the derivative, it is likely that either \(\text{softmax}(\textbf{v})_i\) or \(\text{softmax}(\textbf{v})_j\) will be small, making the overall derivative also very small.</p>
 
 <p>However, by adding the scaling term that is proportional to \(\sqrt{d_k}\), where \(d_k\) is the dimension of the dotted vectors, we make the values in the input vector to the softmax less extreme, and therefore make it less likely that the overall derivative is very small.</p>
 
-<h2 id="back-to-multi-head-attention">Back to Multi-Head Attention</h2>
+<h3 id="multi-head-attention-1">Multi-Head Attention</h3>
 <p>Instead of just using one attention head as in the original attention paper, the authors found it beneficial to linearly project the queries, keys, and values \(h\) times to a lower dimensional space, run attention on each, and aggregate the results.</p>
 
 \[\text{MultiHead}(Q, K, V) = \text{Concat}(\text{head}_1, \text{head}_2, \ldots \text{head}_h) W^O\]
@@ -383,12 +392,10 @@ The $$Q_i, K_i, V_i$$, represent a query, key, and value matrix respectively tha
 
 <p>Where \(W_i^Q \in \mathbb{R}^{d_{\text{model}} \times d_k}\), \(W_i^K \in \mathbb{R}^{d_{\text{model}} \times d_k}\), \(W_i^V \in \mathbb{R}^{d_{\text{model}} \times d_v}\), and \(W^O \in \mathbb{R}^{h d_v \times d_{\text{model}}}\). Additionally, they set \(h=8\) and \(d_k = d_v = d_{\text{model}}/h = 64\). The computational cost of this is similar to if they had just used a single head attention with full dimensionality.</p>
 
-<h2 id="multi-head-self-attention-in-the-encoder">Multi-Head Self-Attention in the Encoder</h2>
-<p>The way this multi-head attention plays out in the encoder is as self-attention, meaning that the <a href="https://stats.stackexchange.com/questions/421935/what-exactly-are-keys-queries-and-values-in-attention-mechanisms">queries, keys, and values</a> all are equal to the hidden state \(H\). In total, this looks as follows:</p>
+<h3 id="multi-head-self-attention-in-the-encoder">Multi-Head Self-Attention in the Encoder</h3>
+<p>The way this multi-head attention plays out in the encoder is as self-attention, meaning that the <a href="https://stats.stackexchange.com/questions/421935/what-exactly-are-keys-queries-and-values-in-attention-mechanisms">queries, keys, and values</a> all are equal to the hidden state \(H\).</p>
 
-<p><img src="/images/transformers2/multiHeadSelfAttention.png" alt="Multi-Head Self-Attention" title="Multi-Head Self-Attention" /></p>
-
-<p>One reasonable question is, why do we even need multi-head self-attention? One thing attention gets you is the ability to mix information between tokens. This is the only part of the architecture that has this capability</p>
+<p>One reasonable question is, why do we even need multi-head self-attention? One thing attention gets you is the ability to mix information between tokens. This is the only part of the architecture that has this capability.</p>
 
 <h2 id="layer-normalization">Layer Normalization</h2>
 <p><a href="https://arxiv.org/pdf/1607.06450.pdf">Layer normalization</a> is a commonly used method to reduce training time by normalizing hidden states within a single training example. Nowadays, it seems <a href="https://paperswithcode.com/method/layer-normalization">more commonly used</a> than <a href="https://arxiv.org/pdf/1502.03167.pdf">batch normalization</a> because it is able to be used for online learning tasks or places where it is impossible to have large mini-batches, and is difficult to apply to RNNs. Here is a <a href="https://leimao.github.io/blog/Layer-Normalization/">mathematical explanation</a> of how it works in transformers:</p>
@@ -401,20 +408,16 @@ The $$Q_i, K_i, V_i$$, represent a query, key, and value matrix respectively tha
 
 <p>Where \(\mu_{t}\) represents the mean for token \(t\) and \(H_{t, i}\)</p>
 
-<p>The rest of layer normlization was quite suprising to me, we also add a \(\gamma, \beta \in \mathbb{R}^{d_{\text{model}}}\) term that gets applied as follows:</p>
+<p>The rest of layer normlization was quite suprising to me. We also add \(\gamma, \beta \in \mathbb{R}^{d_{\text{model}}}\) terms that get learned through backprop and are applied as follows:</p>
 
 \[\text{LayerNorm}(\textbf{h}_{t}) = \gamma \frac{\textbf{h}_{t} - \mu_{t}}{\sigma_{t} + \epsilon} + \beta\]
 
-<p><img src="/images/transformers2/layerNorm.png" alt="LayerNorm" title="LayerNorm" /></p>
-
 <h2 id="mlp">MLP</h2>
-<p>The MLP layers of the transformer are applied identically to each token in the hidden state, and are added back into the residual stream. These layers are essentially comprised of two affine transformations with a ReLU (<a href="https://arxiv.org/pdf/1606.08415.pdf">GeLUs</a> are usually used in modern models, but not in the original paper) in the middle. This can be written as follows:</p>
+<p>The MLP layers of the transformer are applied identically to each token in the hidden state, and are added back into the residual stream. These layers are essentially comprised of two affine transformations with a ReLU (<a href="https://arxiv.org/pdf/1606.08415.pdf">GeLUs</a> are usually used in many modern models, but not in the original paper) in the middle. This can be written as follows:</p>
 
 \[\text{MLP}(\textbf{h}_i) = \text{ReLU}(\textbf{h}_i W_1 + \textbf{b}_1) W_2 + \textbf{b}_2\]
 
 <p>One obvious question might be, what do these MLPs do? <a href="https://transformer-circuits.pub/2022/solu/index.html">Recent work from Anthropic</a> suggests that in language models neurons in MLPs may represent certain rules or categories such as phrases related to music or base64-encoded text. From my own work, it seems that, at least in early layers, of Vision Transformers, MLP neurons often correspond to certain visual textures or patterns.</p>
-
-<p><img src="/images/transformers2/mlp.png" alt="MLP" title="MLP" /></p>
 
 <h2 id="layer-normalization-1">Layer Normalization</h2>
 <p>After the MLP, there is another LayerNorm, which is applied identically to the one before.</p>
@@ -422,27 +425,27 @@ The $$Q_i, K_i, V_i$$, represent a query, key, and value matrix respectively tha
 <h2 id="final-encoder-output">Final Encoder Output</h2>
 <p>What was described above was one encoder block. Note that the input dimensions and output dimensions of each transformer block are the same, namely \(H \in \mathbb{R}^{n \times d_{\text{model}}}\). Therefore, we can just take the output of our first block, and feed it into our second block. This is done \(N\) times. The final hidden state that comes out of the encoder blocks then becomes the key and value matrices for the decoder \(K_E, V_E = H\), more on this later. The encoder is only ran once.</p>
 
-<p>Here is the full encoder:
-<img src="/images/transformers2/encoder.png" alt="Encoder" title="Encoder" /></p>
-
 <h1 id="pre-decoder">Pre Decoder</h1>
 <p>In the original transformers paper, the decoder is used autoregressively, meaning that output translations are fed back into the model. Initially, nothing except for a start of sentence token &lt;SOS&gt; is fed into the model. But as the model starts making predictions, the input sequence to the decoder grows. The input into the encoder is processed the same way as the input to the encoder (see the pre-encoder section).</p>
 
 <blockquote style="background-color: #ecfeec; border-color: #528852; font-style: inherit;">
-Our current output sentence is "Bobby mag", which is tokenized as ["&lt;SOS&gt;", "Bobby&lt;EOW&gt;", "mag&lt;EOW&gt;"] using BPE with vocabulary size $C = 37000$. Now we can vectorize this list to get $\begin{bmatrix} \textbf{e}_{41}^\top \\ \vdots \end{bmatrix} = \begin{bmatrix} \textbf{x}_1^\top \\ \vdots \end{bmatrix} = X \in \mathbb{R}^{n \times C}$, where $\textbf{x}_i$ is the one hot vector for the $i$th input word.
+Our current output sentence is "Bobby mag", which is tokenized as ["&lt;SOS&gt;", "Bobby&lt;EOW&gt;", "mag&lt;EOW&gt;"] using BPE with vocabulary size $C = 37000$. Now we can vectorize this list to get $\begin{bmatrix} \textbf{e}_{41}^\top \\ \vdots \end{bmatrix} = \begin{bmatrix} \textbf{x}_1^\top \\ \vdots \end{bmatrix} = X \in \mathbb{R}^{n \times C}$, where $\textbf{x}_i$ is the one hot vector for the $i$th input word. We again embed the words and add positional encodings as follows, $H = X U^\top + PE \in \mathbb{R}^{n \times d_{\text{model}}}$.
 
 <br /><br />
 
-(Please note that the output tokens from BPE and your one hot vectors depend on your input and I'm just arbitrarily choosing plausible values.)
+(Please note that the output tokens are again from BPE and your one hot vectors depend on your input and I'm just arbitrarily choosing plausible values.)
 </blockquote>
 
-<p><img src="/images/transformers2/preDecoder.png" alt="Pre Decoder" title="Pre Decoder" /></p>
+<p><img src="/images/transformers2/transformersDiagramPreDecoder.png" alt="PreDecoder" title="PreDecoder" /></p>
 
 <h1 id="decoder">Decoder</h1>
-<p>The decoder is almost exactly the same as the encoder, except the attention works differently. Instead of just one multi-head self-attention block, we have a masked multi-head self-attention block, another layernorm, and a multi-head attention block.</p>
+<p>The decoder is almost exactly the same as the encoder, except the attention works differently. Instead of just one multi-head self-attention block, we have a masked multi-head self-attention block and a multi-head attention block. So all in all, we have our embedding, then masked mutli-head self-attention, then layer norm, then multi-head attention, then layer norm, then an MLP, and finally one last layer norm.</p>
+
+<p><img src="/images/transformers2/transformersDiagramDecoder.png" alt="Decoder" title="Decoder" />
+<em>Please note:</em> There is a slight abuse of notation in the diagram above, the query, key, and value weight matrices in the masked attention and the regular attention can have different values, but are just denoted the same.</p>
 
 <h2 id="masked-multi-head-self-attention">Masked Multi-Head Self-Attention</h2>
-<p>Instead of using regular mult-head self-attention, the decoder uses masked multi-head self-attention. Masked multi-head self-attention doesn’t allow for tokens to attend to later tokens. This is implemented by making out (setting to \(-\infty\)) all values in the input of the softmax which would cause attention to later tokens. This just requires us to slightly modify our equation for attention and add in a “look ahead masks”.</p>
+<p>Instead of using regular multi-head self-attention, the decoder uses masked multi-head self-attention. Masked multi-head self-attention doesn’t allow for tokens to attend to later tokens. This is implemented by making out (setting to \(-\infty\)) all values in the input of the softmax which would cause attention to later tokens. This just requires us to slightly modify our equation for attention and add in a “look ahead mask”.</p>
 
 \[\text{MaskedAttention}(Q, K, V) = \text{softmax} \Big( \frac{QK^\top}{\sqrt{d_k}} + 
 
@@ -459,44 +462,93 @@ Our current output sentence is "Bobby mag", which is tokenized as ["&lt;SOS&gt;"
 
 <p>If we didn’t train in parallel, we actually wouldn’t need masking at all. <a href="https://stackoverflow.com/questions/58127059/how-to-understand-masked-multi-head-attention-in-transformer">This is because</a> we could technically do all our training recurrently, where with each token we autoregressively generate, we save the hidden state for that token, and then use it when generating the next token (more on this later).</p>
 
-<h2 id="multi-head-attention-1">Multi-Head Attention</h2>
+<h2 id="multi-head-attention-2">Multi-Head Attention</h2>
 <p>This multi-head attention block is almost the same as the multi-head self-attention in the encoder, except that the key and value matrices come from the output of the encoder. Taking the keys and values from the encoder is necessary in order to incorporate information from the the input sentence into the output translation.</p>
 
 <p>Note, because the value matrix is not the current decoder hidden state \(H\), if the number of tokens in the encoder and decoder were different, we would not be able to add back into the residual stream! Therefore, in practice, a default max number of tokens, or context size, \(n\) is set (to 128 for instance) for both the encoder and decoder blocks. If the sequence is not \(n\) tokens long, the remaining tokens are filled in by padding &lt;PAD&gt; tokens.</p>
 
 <h1 id="post-decoder">Post Decoder</h1>
-<p>Just like with the encoder, there are \(N\) of decoder blocks. To get our output logits using the hidden state \(H\) passed through the transformer decoder layers, we use the embedding matrix \(U\) to unembedd the hidden representation. Our logits are the \(U^\top h_n = y \in \mathbb{R}^C\), which we can pass through a softmax to get the output probability distribution over our vocabulary. Note how we choose the final, or \(n\)th token vector to get our output logits. This is because we are predicting the next word.</p>
+<p>Just like with the encoder, there are \(N\) of decoder blocks. To get our output logits using the hidden state \(H\) passed through the transformer decoder layers, we use the embedding matrix \(U\) to unembed the hidden representation. Our logits are the \(U^\top \textbf{h}_i \in \mathbb{R}^C\). Note how we choose \(i\)th token vector to get our output logits. \(i\) corresponds to the last token in the decoder input which is not a padding token, and we get the logits from this token because we want to predict the next word after this last word. Now we can pass through a softmax to get the output probability distribution over our vocabulary. To actually get the prediction, we sample from this distribution. In the paper they play around with beam search for some of their results, but I’m just going to keep things simple and take the \(\text{argmax}\) from the distribution over our vocabulary.</p>
+
+<p><img src="/images/transformers2/transformersDiagramPostDecoder.png" alt="PostDecoder" title="PostDecoder" /></p>
 
 <p>The decoder is run autoregressively until it outputs the &lt;EOS&gt; token, at which point the translation is finished!</p>
 
+<blockquote style="background-color: #ecfeec; border-color: #528852; font-style: inherit;">
+We now have our final representation $H$ that has information about the original sentence in English ("Bobby likes blackberries."), the current German translation ("Bobby mag"), and the probable next word. We will first apply the unembedding to the third row of $H$ as follows, $P(\textbf{y}_4) = \text{softmax} (U^\top \textbf{h}_3) \in \mathbb{R}^C$. Now we can sample from this distribution to get $\textbf{y}_4 = \textbf{e}_{\text{argmax} (P(\textbf{y}_4))} \in \mathbb{R}^C$. If the model was trained well, this $\textbf{y}_4$ standard basis vector will likely corresponds to the token "Brom", which is the correct next token in the translation.
+</blockquote>
+
 <h1 id="training-a-transformer">Training a Transformer</h1>
+
+<p>To train the described configuration of the transformer, the authors used the WMT 2014 English-German dataset. The Adam optimizer was also used with \(\beta_1 = 0.9, \ \beta_2 = 0.98, \ \epsilon = 10^{-9}\). Additionally, they increased the learning rate linearly for the first 4,000 training steps, and then employed inverse square root learning rate decay for the remaining 96,000 training steps. Here is the mathematical formula used:
+\(lrate = d_{model}^{-0.5} \cdot \min ( step\_num^{-0.5}, step\_num \cdot warmup\_steps^{-1.5} )\)</p>
+
+<p>If you are curious about the details of why learning rate decay works, please see <a href="https://arxiv.org/pdf/1908.01878.pdf">this great paper</a>.</p>
+
+<p>They also used residual dropout, applied to the output of each sub-layer and the input into the encoder and decoder (the sums of the embeddings and positional encodings).</p>
+
+<p>The paper has details on the performance.</p>
 
 <h1 id="variants-on-the-original-architecture">Variants on the Original Architecture</h1>
 
-<h2 id="decoder-only-autoregressive-transformers">Decoder Only Autoregressive Transformers</h2>
+<p>There are several variants on the original transformer architecture, most notably encoder only transformers (like BERT) and decoder only transformers (like GPT).</p>
 
-<p>GPT Models: https://s3-us-west-2.amazonaws.com/openai-assets/research-covers/language-unsupervised/language_understanding_paper.pdf
-Decoder only autoregressive transformer I think: https://arxiv.org/pdf/1801.10198.pdf</p>
+<h2 id="encoder-only-transformers">Encoder Only Transformers</h2>
 
-<p>http://nlp.seas.harvard.edu/annotated-transformer/</p>
+<p>There is a class of transformer models that are often referred to as encoder only transformers. Most commonly, this refers to <a href="https://arxiv.org/pdf/1810.04805.pdf">BERT models</a>. BERT stands for Bidirectional Encoder Representations from Transformers. BERT essentially just takes the encoder part of the transformer, scales it up and fine tunes it on downstream tasks. The encoder is bidirectional because it lacks any sort of masked attention. This enables the model to use information from further down in the sentence to create representations for an earlier word.</p>
 
-<p>https://johnthickstun.com/docs/transformers.pdf</p>
+<p>One of the main tasks this model is pretrained on is masked language modeling, where the model is fed an input sentence with a random word masked out, and the model has to figure out what the word is. Here is an example input sentence and the appropriate output.</p>
+
+<p>Input: “Tommy, who loves soccer, just &lt;MASK&gt; a goal.”
+Desired Output: “Tommy, who loves soccer, just scored a goal.”</p>
+
+<p>However, in 2023, the hype is much more around decoder only transformers.</p>
+
+<h2 id="decoder-only-transformers">Decoder Only Transformers</h2>
+
+<p><a href="https://arxiv.org/pdf/1801.10198.pdf">Decoder only transformers</a> take the original transformer architecture, throw away the encoder, and only keep the decoder. The multi-head attention is removed and we only keep the masked multi-head self-attention because we no longer can get the key and value matrices from the encoder. This architecture can be trained with next token prediction, where the model is fed part of a sentence, and tries to generate the next word. At test time, the model autoregressively generates the output sentence.</p>
+
+<p>A series of popular decoder only transformers is the <a href="https://s3-us-west-2.amazonaws.com/openai-assets/research-covers/language-unsupervised/language_understanding_paper.pdf">GPT</a> series of models (<a href="https://s3-us-west-2.amazonaws.com/openai-assets/research-covers/language-unsupervised/language_understanding_paper.pdf">GPT</a>, <a href="https://d4mucfpksywv.cloudfront.net/better-language-models/language_models_are_unsupervised_multitask_learners.pdf">GPT-2</a>, <a href="https://arxiv.org/pdf/2005.14165.pdf">GPT-3</a>, and soon <a href="https://uxplanet.org/gpt-4-facts-rumors-and-expectations-about-next-gen-ai-model-52a4ddcd662a">GPT-4</a>). With the original GPT, the paradigm was still to pretrain the model on lots of general data, and then fine tune it for specific tasks. Nowadays, the paradigm has gone away from fine tuning and to prompting. There are many resources online which explain this and you can play around with it yourself with <a href="https://chat.openai.com/">Chat-GPT</a>.</p>
 
 <h1 id="conclusion">Conclusion</h1>
 
-<p>Discussion over performance: Why are transformers better? How are inputs embedded into transformers (maybe include this in the next post)?</p>
+<p>I hope this post sheds a bit of light on how transformers work! There are still many questions I haven’t answered here (some of which have answers in the literature, some of which don’t), such as: Why are transformers better than other architectures? How can transformers be used with other modalities? What algorithms do transformers learn? What are the limitations of the transformer architecture? How far will scaling take us?</p>
 
-<p>[add blurb about transformers]. The next post will focus on the uses of Transformers in modern deep learning and speculation of how far scaling Transformers can go. Stay tuned 😎.</p>
+<p>I might try to answer some of these in a future blog post. But for now, stay calm and code on 😎.</p>
 
 <h1 id="references">References:</h1>
 <ul>
   <li><a href="https://arxiv.org/pdf/1706.03762.pdf">Attention Is All You Need</a></li>
-  <li><a href="https://aclanthology.org/P02-1040.pdf">BLEU Score</a></li>
-  <li><a href="https://github.com/hyunwoongko/transformer">Someone Else’s Implementation</a></li>
+  <li><a href="https://berkan.xyz/posts/2022/01/transformersPart1/">Last Post on Attention</a></li>
+  <li><a href="https://github.com/hyunwoongko/transformer">A Good Implementation</a></li>
+  <li><a href="https://machinelearningmastery.com/transduction-in-machine-learning/">Transduction in ML</a></li>
+  <li><a href="https://colah.github.io/posts/2015-08-Understanding-LSTMs/">Understanding LSTMs</a></li>
+  <li><a href="https://arxiv.org/pdf/1508.07909.pdf">Byte-Pair Encoding Paper</a></li>
+  <li><a href="https://towardsdatascience.com/byte-pair-encoding-subword-based-tokenization-algorithm-77828a70bee0">Byte-Pair Encoding explanation</a></li>
+  <li><a href="https://arxiv.org/pdf/1608.05859.pdf">Using the Output Embedding to Improve Language Models</a></li>
+  <li><a href="http://jalammar.github.io/illustrated-transformer/">Illustrated Transformer</a></li>
+  <li><a href="https://transformer-circuits.pub/2021/framework/index.html#residual-comms">A Mathematical Framework for Transformer Circuits</a></li>
+  <li><a href="https://en.wikipedia.org/wiki/Vanishing_gradient_problem">Vanishing Gradients Problem</a></li>
+  <li><a href="https://eli.thegreenplace.net/2016/the-softmax-function-and-its-derivative/">Derivative of Softmax</a></li>
+  <li><a href="https://stats.stackexchange.com/questions/421935/what-exactly-are-keys-queries-and-values-in-attention-mechanisms">What are the queries, keys, and values?</a></li>
+  <li><a href="https://arxiv.org/pdf/1607.06450.pdf">Layer normalization</a></li>
+  <li><a href="https://paperswithcode.com/method/layer-normalization">Papers With Code Layer Norm</a></li>
+  <li><a href="https://arxiv.org/pdf/1502.03167.pdf">Batch Normalization</a></li>
+  <li><a href="https://leimao.github.io/blog/Layer-Normalization/">Mathematical Explanation</a></li>
+  <li><a href="https://arxiv.org/pdf/1606.08415.pdf">GeLUs</a></li>
+  <li><a href="https://transformer-circuits.pub/2022/solu/index.html">SoLU</a></li>
+  <li><a href="https://stackoverflow.com/questions/58127059/how-to-understand-masked-multi-head-attention-in-transformer">Understanding Masked Multi-Head Attention</a></li>
+  <li><a href="https://arxiv.org/pdf/1908.01878.pdf">How Does Learning Rate Decay Help Modern Neural Networks?</a></li>
+  <li><a href="https://arxiv.org/pdf/1810.04805.pdf">BERT models</a></li>
+  <li><a href="https://arxiv.org/pdf/1801.10198.pdf">Decoder only transformers</a></li>
+  <li><a href="https://s3-us-west-2.amazonaws.com/openai-assets/research-covers/language-unsupervised/language_understanding_paper.pdf">GPT</a></li>
+  <li><a href="https://d4mucfpksywv.cloudfront.net/better-language-models/language_models_are_unsupervised_multitask_learners.pdf">GPT-2</a></li>
+  <li><a href="https://arxiv.org/pdf/2005.14165.pdf">GPT-3</a></li>
+  <li><a href="https://uxplanet.org/gpt-4-facts-rumors-and-expectations-about-next-gen-ai-model-52a4ddcd662a">GPT-4 Announcement</a></li>
+  <li><a href="https://chat.openai.com/">Chat-GPT</a></li>
+  <li><a href="http://nlp.seas.harvard.edu/annotated-transformer/">The Annotated Transformer</a></li>
+  <li><a href="https://johnthickstun.com/docs/transformers.pdf">A Mathematical Guide to Transfomers</a></li>
 </ul>
-
-<p>http://jalammar.github.io/illustrated-transformer/
-https://colah.github.io/posts/2015-08-Understanding-LSTMs/</p>
 
         
       </section>
@@ -538,11 +590,11 @@ https://colah.github.io/posts/2015-08-Understanding-LSTMs/</p>
     <h4 class="page__share-title">Share on</h4>
   
 
-  <a href="https://twitter.com/intent/tweet?text=http://localhost:4000/posts/2022/05/transformersPart2/" class="btn btn--twitter" title="Share on Twitter"><i class="fab fa-twitter" aria-hidden="true"></i><span> Twitter</span></a>
+  <a href="https://twitter.com/intent/tweet?text=http://localhost:4000/posts/2023/01/transformersPart2/" class="btn btn--twitter" title="Share on Twitter"><i class="fab fa-twitter" aria-hidden="true"></i><span> Twitter</span></a>
 
-  <a href="https://www.facebook.com/sharer/sharer.php?u=http://localhost:4000/posts/2022/05/transformersPart2/" class="btn btn--facebook" title="Share on Facebook"><i class="fab fa-facebook" aria-hidden="true"></i><span> Facebook</span></a>
+  <a href="https://www.facebook.com/sharer/sharer.php?u=http://localhost:4000/posts/2023/01/transformersPart2/" class="btn btn--facebook" title="Share on Facebook"><i class="fab fa-facebook" aria-hidden="true"></i><span> Facebook</span></a>
 
-  <a href="https://www.linkedin.com/shareArticle?mini=true&url=http://localhost:4000/posts/2022/05/transformersPart2/" class="btn btn--linkedin" title="Share on LinkedIn"><i class="fab fa-linkedin" aria-hidden="true"></i><span> LinkedIn</span></a>
+  <a href="https://www.linkedin.com/shareArticle?mini=true&url=http://localhost:4000/posts/2023/01/transformersPart2/" class="btn btn--linkedin" title="Share on LinkedIn"><i class="fab fa-linkedin" aria-hidden="true"></i><span> LinkedIn</span></a>
 </section>
 
       
@@ -550,12 +602,11 @@ https://colah.github.io/posts/2015-08-Understanding-LSTMs/</p>
 
   <nav class="pagination">
     
-      <a href="http://localhost:4000/posts/2022/05/transformersPart2/" class="pagination--pager" title="Vision Transformer Mechanistic Interpretability
+      <a href="http://localhost:4000/posts/2022/01/transformersPart1/" class="pagination--pager" title="Understanding Transformers Part 1: Attention Mechanisms
 ">Previous</a>
     
     
-      <a href="http://localhost:4000/droptangle/" class="pagination--pager" title="Droptangle
-">Next</a>
+      <a href="#" class="pagination--pager disabled">Next</a>
     
   </nav>
 
@@ -571,132 +622,6 @@ https://colah.github.io/posts/2015-08-Understanding-LSTMs/</p>
         <h4 class="page__related-title">You May Also Enjoy</h4>
       
       <div class="grid__wrapper">
-        
-          
-
-
-
-
-
-<div class="grid__item">
-  <article class="archive__item" itemscope itemtype="http://schema.org/CreativeWork">
-    
-
-    <h2 class="archive__item-title" itemprop="headline">
-      
-        <a href="http://localhost:4000/neuralNet3SAT/" rel="permalink">Neuralnet3sat
-</a>
-      
-    </h2>
-    
-    
-      <p class="page__meta"><i class="fa fa-clock-o" aria-hidden="true"></i> 
-
-
-  
-	  less than 1 minute read
-	
-</p>
-    
-
-        
-         <p class="page__date"><strong><i class="fa fa-fw fa-calendar" aria-hidden="true"></i> Published:</strong> <time datetime="2023-01-13T00:00:00-08:00">January 13, 2023</time></p>
-        
-
-    
-    <p class="archive__item-excerpt" itemprop="description">
-</p>
-    
-    
-    
-
-  </article>
-</div>
-
-        
-          
-
-
-
-
-
-<div class="grid__item">
-  <article class="archive__item" itemscope itemtype="http://schema.org/CreativeWork">
-    
-
-    <h2 class="archive__item-title" itemprop="headline">
-      
-        <a href="http://localhost:4000/droptangle/" rel="permalink">Droptangle
-</a>
-      
-    </h2>
-    
-    
-      <p class="page__meta"><i class="fa fa-clock-o" aria-hidden="true"></i> 
-
-
-  
-	  less than 1 minute read
-	
-</p>
-    
-
-        
-         <p class="page__date"><strong><i class="fa fa-fw fa-calendar" aria-hidden="true"></i> Published:</strong> <time datetime="2022-09-15T00:00:00-07:00">September 15, 2022</time></p>
-        
-
-    
-    <p class="archive__item-excerpt" itemprop="description">
-</p>
-    
-    
-    
-
-  </article>
-</div>
-
-        
-          
-
-
-
-
-
-<div class="grid__item">
-  <article class="archive__item" itemscope itemtype="http://schema.org/CreativeWork">
-    
-
-    <h2 class="archive__item-title" itemprop="headline">
-      
-        <a href="http://localhost:4000/posts/2022/05/transformersPart2/" rel="permalink">Vision Transformer Mechanistic Interpretability
-</a>
-      
-    </h2>
-    
-    
-      <p class="page__meta"><i class="fa fa-clock-o" aria-hidden="true"></i> 
-
-
-  
-	  29 minute read
-	
-</p>
-    
-
-        
-         <p class="page__date"><strong><i class="fa fa-fw fa-calendar" aria-hidden="true"></i> Published:</strong> <time datetime="2022-05-26T00:00:00-07:00">May 26, 2022</time></p>
-        
-
-    
-    <p class="archive__item-excerpt" itemprop="description"><p>This post describes my research during the summer of 2022 on the mechanistic interpretability of vision transformers.</p>
-</p>
-    
-    
-    
-
-  </article>
-</div>
-
         
           
 
@@ -731,6 +656,90 @@ https://colah.github.io/posts/2015-08-Understanding-LSTMs/</p>
 
     
     <p class="archive__item-excerpt" itemprop="description"><p>Part one in a series of posts about understanding Transformers. This post focuses on attention mechanisms.</p>
+</p>
+    
+    
+    
+
+  </article>
+</div>
+
+        
+          
+
+
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="http://schema.org/CreativeWork">
+    
+
+    <h2 class="archive__item-title" itemprop="headline">
+      
+        <a href="http://localhost:4000/posts/2021/12/gradCAM/" rel="permalink">Grad-CAM and Basic CNN Interpretability (with Implementation!)
+</a>
+      
+    </h2>
+    
+    
+      <p class="page__meta"><i class="fa fa-clock-o" aria-hidden="true"></i> 
+
+
+  
+	  24 minute read
+	
+</p>
+    
+
+        
+         <p class="page__date"><strong><i class="fa fa-fw fa-calendar" aria-hidden="true"></i> Published:</strong> <time datetime="2021-12-30T00:00:00-08:00">December 30, 2021</time></p>
+        
+
+    
+    <p class="archive__item-excerpt" itemprop="description"><p>Explanation of the basics of CNN interpretability, how CAM works, and how Grad-CAM works! Even comes with an implementation in PyTorch.</p>
+</p>
+    
+    
+    
+
+  </article>
+</div>
+
+        
+          
+
+
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="http://schema.org/CreativeWork">
+    
+
+    <h2 class="archive__item-title" itemprop="headline">
+      
+        <a href="http://localhost:4000/posts/2021/08/fewShotBasics/" rel="permalink">Few-Shot Learning - Why, How, and the Future
+</a>
+      
+    </h2>
+    
+    
+      <p class="page__meta"><i class="fa fa-clock-o" aria-hidden="true"></i> 
+
+
+  
+	  7 minute read
+	
+</p>
+    
+
+        
+         <p class="page__date"><strong><i class="fa fa-fw fa-calendar" aria-hidden="true"></i> Published:</strong> <time datetime="2021-08-24T00:00:00-07:00">August 24, 2021</time></p>
+        
+
+    
+    <p class="archive__item-excerpt" itemprop="description"><p>Brief introduction and overview of few-shot learning. Discusses why few-shot learning is cool, common approaches to few-shot learning, and the potential impact it could have in the future.</p>
 </p>
     
     
