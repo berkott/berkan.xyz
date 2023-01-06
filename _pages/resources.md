@@ -16,7 +16,7 @@ Really Cool Blogs:
 - [Chris Olah](https://colah.github.io/)
 - [The Batch from DeepLearning.AI](https://read.deeplearning.ai/the-batch/) ← I know this is technically a newsletter
 
-Some of my Favourite Papers:
+Some of my Favorite Papers:
 - [A Density-Based Algorithm for Discovering Clusters in Large Spatial Databases with Noise](https://www.aaai.org/Papers/KDD/1996/KDD96-037.pdf)
 - [You Only Look Once: Unified, Real-Time Object Detection](https://arxiv.org/abs/1506.02640)
 - [Building Machines That Learn and Think Like People](https://arxiv.org/abs/1604.00289)
