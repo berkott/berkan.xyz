@@ -3,18 +3,18 @@ main:
   # Posts folder
   - title: "Blog"
     url: /posts/
-
-  # Resources folder
-  - title: "Resources"
-    url: /resources/
     
-  # # Publications folder
-  # - title: "Publications"
-  #   url: /publications/
+  # Publications folder
+  - title: "Publications"
+    url: /publications/
 
   # Projects folder
   - title: "Projects"
     url: /projects/
+
+  # Resources folder
+  - title: "Resources"
+    url: /resources/
 
   # # Check under files
   # - title: "CV"

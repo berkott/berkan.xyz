@@ -2,7 +2,7 @@
 title: 'Understanding Transformers Part 2: Technical Details of Transformers'
 date: 2023-01-04
 permalink: /posts/2023/01/transformersPart2/
-excerpt: "Part two post in a series about understanding Transformers. This post focuses on the the technical details of Transformers."
+excerpt: "Part two in a series about understanding Transformers. This post focuses on the the technical details of Transformers."
 tags:
   - Artificial Intelligence
 ---
