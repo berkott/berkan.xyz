@@ -15,6 +15,7 @@ Really Cool Blogs:
 - [Jeff Kaufman](https://www.jefftk.com/p/replaceability-thinking-on-the-margin)
 - [Chris Olah](https://colah.github.io/)
 - [The Batch from DeepLearning.AI](https://read.deeplearning.ai/the-batch/) ← I know this is technically a newsletter
+- [Lilian Weng](https://lilianweng.github.io/)
 
 Some of my Favorite Papers:
 - [A Density-Based Algorithm for Discovering Clusters in Large Spatial Databases with Noise](https://www.aaai.org/Papers/KDD/1996/KDD96-037.pdf)
