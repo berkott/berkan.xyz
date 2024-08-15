@@ -4,9 +4,10 @@ title: "Resources"
 author_profile: true
 ---
 
-This page is a collection of useful resources, blogs, papers, and more that I've found for a variety of topics. Listing something here doesn't mean I support everything the author says.
+This page is a collection of useful resources, blogs, papers, and more that I've found for a variety of topics. 
+<!-- Listing something here doesn't mean I support everything the author says. -->
 
-Really Cool Blogs:
+<!-- Really Cool Blogs:
 - [Gwern](https://www.gwern.net/index)
 - [Evoiding](https://evoiding.com/)
 - [Michael Nielsen](https://mnielsen.github.io/)
@@ -32,10 +33,10 @@ Some of my Favorite Papers:
 - [Thread: Circuits](https://distill.pub/2020/circuits/)
 - [Understanding and Improving Layer Normalization](https://proceedings.neurips.cc/paper/2019/file/2f4fe03d77724a7217006e5d16728874-Paper.pdf)
 - [Disentangling by Subspace Diffusion](https://arxiv.org/pdf/2006.12982.pdf)
-- [A Note on Random Projections for Preserving Paths on a Manifold](https://cseweb.ucsd.edu//~naverma/manifold/rp_mfd.pdf)
+- [A Note on Random Projections for Preserving Paths on a Manifold](https://cseweb.ucsd.edu//~naverma/manifold/rp_mfd.pdf) -->
 
 
-Quick-ish Reference Materials:
+Quick Reference Materials:
 - [My Git Guide](https://technotitans.slab.com/posts/git-guide-z98a7s1b)
 - [Someone else's Git Guide](http://rogerdudler.github.io/git-guide/)
 - [LaTeX Reference](https://alozano.clas.uconn.edu/wp-content/uploads/sites/490/2020/08/latexcheatsheet.pdf)
@@ -43,17 +44,17 @@ Quick-ish Reference Materials:
 - [State of AI](https://www.stateof.ai/)
 - [IMAGENET Classes](https://deeplearning.cms.waikato.ac.nz/user-guide/class-maps/IMAGENET/)
 
-Good Technical Books:
+<!-- Good Technical Books:
 - [Deep Learning Book](https://www.deeplearningbook.org/)
-- [Neural Networks and Deep Learning](http://neuralnetworksanddeeplearning.com/)
+- [Neural Networks and Deep Learning](http://neuralnetworksanddeeplearning.com/) -->
 
-Cool Ideas:
+<!-- Cool Ideas:
 - [Focusing](https://focusing.org/felt-sense/learning-focusing)
 - [Less Wrong](https://www.lesswrong.com/)
-- [The Egg](http://www.galactanet.com/oneoff/theegg_mod.html)
+- [The Egg](http://www.galactanet.com/oneoff/theegg_mod.html) -->
 
 Other Fun Stuff 🙂:
 - [GeoGuessr](https://www.geoguessr.com/)
-- [GeoWizard Videos](https://www.youtube.com/c/GeoWizard)
+<!-- - [GeoWizard Videos](https://www.youtube.com/c/GeoWizard) -->
 - [CesarMuroya Snooker Videos](https://www.youtube.com/c/CesarMuroya)
 - [CodeBullet](https://www.youtube.com/c/CodeBullet)
