@@ -1,6 +1,8 @@
 # My README
 Use Docker: `docker run -ti -v /home/.../berkan.xyz/:/mysrc --network host --entrypoint /bin/bash ghcr.io/actions/jekyll-build-pages:v1.0.6`
 
+`sudo jekyll serve -l -H localhost`
+
 Run this to get dev config: `bundle exec jekyll liveserve --config _config.yml,_config.dev.yml`.
 
 Just push changes to "deploy" new version.

@@ -7,10 +7,10 @@
 
 # Site Settings
 locale                   : "en-US"
-title                    : "Berkan"
+title                    : "Berkan Ottlik"
 title_separator          : "-"
-name                     : &name "Berkan"
-description              : &description "Student at Columbia University looking to improve the wellbeing of sentient beings"
+name                     : &name "Berkan Ottlik"
+description              : &description "Undergraduate at Columbia University"
 url                      : https://berkan.xyz # the base hostname & protocol for your site e.g. "https://mmistakes.github.io" TODO: change this before deploy 
 baseurl                  : "" # the subpath of your site, e.g. "/blog"
 repository               : "berkott/berkan.xyz"
@@ -80,14 +80,14 @@ analytics:
 
 # Site Author
 author:
-  name             : "Berkan"
+  name             : "Berkan Ottlik"
   avatar           : "pfp2.jpg"
   bio              : "Senior Undergraduate at Columbia University"
   location         : "New York City"
   employer         :
   pubmed           : 
-  googlescholar    : 
-  email            : "berkan.ottlik [at] columbia [dot] edu"
+  googlescholar    : https://scholar.google.com/citations?user=cAkhZCgAAAAJ
+  email            : "bto2106 [at] columbia [dot] edu"
   researchgate     :  # example: "https://www.researchgate.net/profile/yourprofile"
   uri              :
   bitbucket        :
@@ -102,7 +102,7 @@ author:
   instagram        :
   impactstory      : #"https://profiles.impactstory.org/u/xxxx-xxxx-xxxx-xxxx"
   lastfm           :
-  linkedin         : "berkan-ottlik-252872178/"
+  linkedin         : "berkanottlik"
   orcid            : 
   pinterest        :
   soundcloud       :

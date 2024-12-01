@@ -44,7 +44,7 @@
       </h2>
 
       {% if post.date %}
-        <p class="page__date"><strong>Created:</strong> <time datetime="{{ post.date | default: "1900-01-01" | date_to_xmlschema }}">{{ post.date | default: "1900-01-01" | date: "%B %d, %Y" }}</time></p>
+        <p class="page__date"><strong>Created:</strong> <time datetime="{{ post.date | default: "1900-01-01" | date_to_xmlschema }}">{{ post.date | default: "1900-01-01" | date: "%B %Y" }}</time></p>
       {% endif %}
     {% endif %}
     
