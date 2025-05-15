@@ -1,0 +1,124 @@
+@import 'tailwindcss';
+@import 'prismjs/themes/prism-tomorrow.min.css';
+
+@theme {
+  --color-olive: #626F47;
+  --color-light-olive: #ece7d1;
+  /* e3e2cc dbdec8 */
+  /* --color-lime: #A4B465; */
+  --color-cream: #fcf9f2;
+  /* faf5ea F5ECD5 fcf9f2 */
+  /* --color-gold: #F0BB78; */
+  --color-dark-gold: #B8860B;
+
+  --color-gray: var(--color-gray-500);
+  --color-dark-gray: var(--color-gray-700);
+}
+
+@layer base {
+  /* Body styles */
+  body {
+    font-family: 'Roboto Serif', serif;
+    background-color: var(--color-cream);
+  }
+
+  /* Headings */
+  h1 {
+    font-size: 1.5rem; /* text-2xl */
+    font-weight: 700;
+    margin-top: 1.25rem;
+    margin-bottom: 0.5rem;
+    line-height: 1.15;
+    /* color: var(--color-olive); */
+    color: var(--color-dark-gray);
+  }
+  h2 {
+    font-size: 1.25rem; /* text-xl */
+    font-weight: 700;
+    margin-top: 1rem;
+    margin-bottom: 0.5rem;
+    line-height: 1.2;
+    /* color: var(--color-olive); */
+    color: var(--color-dark-gray);
+  }
+  h3 {
+    font-size: 1.125rem; /* text-lg */
+    font-weight: 600;
+    margin-top: 0.75rem;
+    margin-bottom: 0.4rem;
+    line-height: 1.25;
+    /* color: var(--color-olive); */
+    color: var(--color-dark-gray);
+  }
+  h4, h5, h6 {
+    font-size: 1rem; /* text-base */
+    font-weight: 600;
+    margin-top: 0.5rem;
+    margin-bottom: 0.3rem;
+    line-height: 1.3;
+    color: var(--color-dark-gray);
+    /* color: var(--color-oilve); */
+  }
+
+  /* Paragraphs */
+  p {
+    margin-top: 0.5em;
+    margin-bottom: 0.5em;
+    line-height: 1.6;
+    color: var(--color-dark-gray);
+  }
+
+  div {
+    color: var(--color-dark-gray);
+  }
+
+  /* Bulleted lists */
+  ul {
+    list-style-type: disc;
+    padding-left: 1.5em;
+    margin-top: 0.5em;
+    margin-bottom: 0.5em;
+  }
+  ul li {
+    margin-bottom: 0.25em;
+    color: var(--color-dark-gray);
+  }
+  ul li::marker {
+    color: var(--color-gray);
+    font-size: 1.1em;
+  }
+
+  /* Numbered lists */
+  ol {
+    list-style-type: decimal;
+    padding-left: 1.5em;
+    margin-top: 0.5em;
+    margin-bottom: 0.5em;
+  }
+  ol li {
+    margin-bottom: 0.25em;
+    color: var(--color-dark-gray);
+  }
+  ol li::marker {
+    color: var(--color-gray);
+    font-size: 1.1em;
+  }
+
+  /* Images */
+  img {
+    display: block;
+    max-width: 100%;
+    height: auto;
+    margin-top: 1em;
+    margin-bottom: 1em;
+    border-radius: 0.75rem;
+    box-shadow: 2px 2px 8px rgba(0,0,0,0.2);
+  }
+
+  /* Links */
+  a {
+    /* color: var(--color-dark-gold); */
+    color: var(--color-olive);
+    text-decoration: underline;
+  }
+}
