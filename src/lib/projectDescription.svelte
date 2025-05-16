@@ -8,7 +8,7 @@
 
 <div class="project">
   <div class="flex items-center gap-4">
-    <img src={imageSrc} alt="Project Picture" class="w-24 h-24 object-cover">
+    <img src={imageSrc} alt={`${title} project`} class="w-24 h-24 object-cover">
     <div>
       <h2 class="mt-0">
         <a href={link} class="hover:underline">{title}</a>
