@@ -11,7 +11,8 @@
 			<a href="/blog" class="text-olive no-underline hover:underline">Blog</a>
 			<a href="/projects" class="text-olive no-underline hover:underline">Projects</a>
 			<a href="/publications" class="text-olive no-underline hover:underline">Publications</a>
-			<a href="/resources" class="text-olive no-underline hover:underline">Resources</a>
+			<a href="/digitalGarden" class="text-olive no-underline hover:underline">Digital Garden</a>
+			<!-- <a href="/resources" class="text-olive no-underline hover:underline">Resources</a> -->
 		</div>
 	</nav>
 	<div>

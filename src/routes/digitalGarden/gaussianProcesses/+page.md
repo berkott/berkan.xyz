@@ -1,0 +1,1 @@
+The whole checking it at any set of points is gaussian and then how to do inference with it and then maybe an example with a linear kernel?

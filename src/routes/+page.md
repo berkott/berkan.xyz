@@ -14,18 +14,20 @@
     <p class="mt-0 text-xs text-center">(click image to swap)</p>
   </div>
   <div>
-    <p>I'm Berkan, AKA Berk. I like people, reach out 😊!</p>
+    <p>I'm Berkan, AKA Berk. Reach out 😊!</p>
     <p>berkott3002 [at] gmail [dot] com</p>
   </div>
 </div>
 
-Right now, I am most excited about deep learning theory, family (including girlfriend and cats), and staying healthy. For fun, I garden, play water polo, talk to friends, and listen to and play Beatles songs. 🐨✌️❤️.
+Professionally, I am a scientist, working to develop a theory of deep learning.
+
+In my private life, I love family, friends, staying healthy, gardening, water polo, the Beatles, playing piano, and more. 🐨✌️❤️.
 
 # Background
 
 ## PhD
-- Incoming PhD student at The University of Pennsylvania. Grateful to be advised by [Surbhi Goel](https://www.surbhigoel.com/).
-- Incoming intern in Berkeley. Grateful to work with [James Simon](https://james-simon.github.io/).
+- PhD student at The University of Pennsylvania. Grateful to be advised by [Surbhi Goel](https://www.surbhigoel.com/).
+- Interning with [James Simon](https://james-simon.github.io/) at [Imbue](https://imbue.com/).
 - Data scientist intern at [Hawaii Farming](https://www.hawaiifarming.com/).
 
 ## Undergrad

@@ -25,3 +25,9 @@ https://svelte-math.vercel.app/
 https://colorhunt.co/palette/626f47a4b465f5ecd5f0bb78
 
 Remember, I can use folder names starting with _ to ignore them from being published.
+
+# Usage
+- npm run dev
+- npm run build
+- npm run preview
+- Then git push
