@@ -1,0 +1,1 @@
+import{t,a as n}from"../chunks/DKJMLC42.js";import"../chunks/BntcpoEZ.js";var o=t("<p>The whole checking it at any set of points is gaussian and then how to do inference with it and then maybe an example with a linear kernel?</p>");function r(e){var a=o();n(e,a)}export{r as component};

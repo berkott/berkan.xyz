@@ -1,0 +1,1 @@
+import{t as a,a as r}from"../chunks/DKJMLC42.js";import"../chunks/BntcpoEZ.js";var t=a('<p><a href="https://arxiv.org/pdf/1711.00165" rel="nofollow">https://arxiv.org/pdf/1711.00165</a></p>');function m(p){var o=t();r(p,o)}export{m as component};
