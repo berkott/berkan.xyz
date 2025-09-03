@@ -19,7 +19,7 @@
   </div>
 </div>
 
-Professionally, I am a scientist, working to develop a theory of deep learning.
+I am a scientist, developing theories of deep learning.
 
 In my private life, I love family, friends, staying healthy, gardening, water polo, the Beatles, playing piano, and more. 🐨✌️❤️.
 

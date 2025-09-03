@@ -8,6 +8,7 @@ Welcome to my [digital garden](https://joelhooks.com/digital-garden/)! It is a g
 # Math
 - [Gaussians](/digitalGarden/gaussians)
 - [Gaussian Processes](/digitalGarden/gaussianProcesses)
+- [Bayesian Stuff](/digitalGarden/bayesianStuff)
 
 # Programming
 - [Git guide](http://rogerdudler.github.io/git-guide/)
@@ -15,3 +16,5 @@ Welcome to my [digital garden](https://joelhooks.com/digital-garden/)! It is a g
 
 # Other
 - [Taking knowledge work seriously](https://notes.andymatuschak.org/zMbCwoVdjsqPNyTRRr3phPN)
+
+TODO: Make internal links a different color from external links.

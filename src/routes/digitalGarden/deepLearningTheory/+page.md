@@ -15,6 +15,7 @@ This section is based on the pareto frontier of models of deep learning from [Ja
 - Kernel regression
 - NNGP / NTK
   - [Deep Neural Networks as Gaussian Processes notes](/digitalGarden/NNGP)
+  - [Limitations of kerenels notes](/digitalGarden/kernelLimitations)
   - Jacot's paper
   - The lazy (NTK) and rich (µP) regimes: A gentle tutorial
   - On Lazy Training in Differentiable Programming
