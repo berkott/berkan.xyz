@@ -9,11 +9,11 @@
 		<link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,200..800;1,6..72,200..800&family=Roboto+Serif:ital,opsz,wght@0,8..144,100..900;1,8..144,100..900&family=Roboto:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
 		
 		<link href="../_app/immutable/assets/0.FjlhOvzP.css" rel="stylesheet">
-		<link rel="modulepreload" href="../_app/immutable/entry/start.C9-ypR25.js">
-		<link rel="modulepreload" href="../_app/immutable/chunks/CBiU5W-l.js">
+		<link rel="modulepreload" href="../_app/immutable/entry/start.BWpdkTly.js">
+		<link rel="modulepreload" href="../_app/immutable/chunks/BxBDq1dI.js">
 		<link rel="modulepreload" href="../_app/immutable/chunks/BuAUvOro.js">
 		<link rel="modulepreload" href="../_app/immutable/chunks/B_P4XA_-.js">
-		<link rel="modulepreload" href="../_app/immutable/entry/app.DTrSqSXV.js">
+		<link rel="modulepreload" href="../_app/immutable/entry/app.DhI3FvNA.js">
 		<link rel="modulepreload" href="../_app/immutable/chunks/D8__v_G3.js">
 		<link rel="modulepreload" href="../_app/immutable/chunks/hqIbxRWK.js">
 		<link rel="modulepreload" href="../_app/immutable/chunks/DKJMLC42.js">
@@ -21,26 +21,27 @@
 		<link rel="modulepreload" href="../_app/immutable/chunks/BIEbWpQy.js">
 		<link rel="modulepreload" href="../_app/immutable/nodes/0.DiNTwiUB.js">
 		<link rel="modulepreload" href="../_app/immutable/chunks/DhGDfn95.js">
-		<link rel="modulepreload" href="../_app/immutable/nodes/12.B071F4a0.js">
+		<link rel="modulepreload" href="../_app/immutable/nodes/13.CUalZmvC.js">
 		<link rel="modulepreload" href="../_app/immutable/chunks/BntcpoEZ.js">
+		<link rel="modulepreload" href="../_app/immutable/chunks/wXsJu9Ig.js">
 	</head>
 	<body data-sveltekit-preload-data="hover">
-		<div style="display: contents"><!--[--><!--[--><!----><div class="max-w-[100ch] mx-auto px-4 mb-10"><nav class="flex flex-col md:flex-row md:items-center md:justify-between py-4 border-b border-olive mb-3"><a href="/" class="text-olive font-bold text-2xl md:text-2xl no-underline hover:underline mb-4 md:mb-0">Berkan</a> <div class="flex flex-col md:flex-row md:space-x-6 space-y-4 md:space-y-0"><a href="/blog" class="text-olive no-underline hover:underline">Blog</a> <a href="/projects" class="text-olive no-underline hover:underline">Projects</a> <a href="/publications" class="text-olive no-underline hover:underline">Publications</a> <a href="/digitalGarden" class="text-olive no-underline hover:underline">Digital Garden</a></div></nav> <div><!----><p>Covariance matrix properties</p> <p>Eigenvalue stuff</p><!----><!----></div></div><!----><!--]--> <!--[!--><!--]--><!--]-->
+		<div style="display: contents"><!--[--><!--[--><!----><div class="max-w-[100ch] mx-auto px-4 mb-10"><nav class="flex flex-col md:flex-row md:items-center md:justify-between py-4 border-b border-olive mb-3"><a href="/" class="text-olive font-bold text-2xl md:text-2xl no-underline hover:underline mb-4 md:mb-0">Berkan</a> <div class="flex flex-col md:flex-row md:space-x-6 space-y-4 md:space-y-0"><a href="/blog" class="text-olive no-underline hover:underline">Blog</a> <a href="/projects" class="text-olive no-underline hover:underline">Projects</a> <a href="/publications" class="text-olive no-underline hover:underline">Publications</a> <a href="/digitalGarden" class="text-olive no-underline hover:underline">Digital Garden</a></div></nav> <div><!----><h1>Fun with bivariate Gaussians</h1> <p>Suppose I give you the following bivariate Gaussian distribution,</p> <div class="math math-display"><!----><span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><mi mathvariant="script">N</mi><mo fence="false" stretchy="true" minsize="1.8em" maxsize="1.8em">(</mo><mrow><mo fence="true">[</mo><mtable rowspacing="0.16em" columnalign="center" columnspacing="1em"><mtr><mtd><mstyle scriptlevel="0" displaystyle="false"><mn>0</mn></mstyle></mtd></mtr><mtr><mtd><mstyle scriptlevel="0" displaystyle="false"><mn>1</mn></mstyle></mtd></mtr></mtable><mo fence="true">]</mo></mrow><mo separator="true">,</mo><mrow><mo fence="true">[</mo><mtable rowspacing="0.16em" columnalign="center center" columnspacing="1em"><mtr><mtd><mstyle scriptlevel="0" displaystyle="false"><mrow><mn>3</mn><mtext> </mtext></mrow></mstyle></mtd><mtd><mstyle scriptlevel="0" displaystyle="false"><mn>1</mn></mstyle></mtd></mtr><mtr><mtd><mstyle scriptlevel="0" displaystyle="false"><mrow><mn>1</mn><mtext> </mtext></mrow></mstyle></mtd><mtd><mstyle scriptlevel="0" displaystyle="false"><mn>2</mn></mstyle></mtd></mtr></mtable><mo fence="true">]</mo></mrow><mo fence="false" stretchy="true" minsize="1.8em" maxsize="1.8em">)</mo><mi mathvariant="normal">.</mi></mrow><annotation encoding="application/x-tex">\mathcal{N} \Big(\begin{bmatrix} 0 \\ 1 \end{bmatrix}, \begin{bmatrix} 3 \ &amp; 1 \\ 1 \ &amp; 2 \end{bmatrix} \Big).</annotation></semantics></math></span><!----></div> <p>Then I say “tell me sonny, if I drew a bunch of points from this distribution and plotted them, where about would they be?” I want a quick answer! You don’t even have time to run a Python simulation. What do you do?</p> <h2>Background</h2> <p>The mean vector is easy to understand, it’s just going to be the center of your distribution. The covariance matrix is the tricky part. Let’s recall some properties.</p> <ul><li>First off, it’s symmetric. Why? It comes straight from the definition of covariance and the commutativity of multiplication.</li> <li>Also, it’s positive semi-definite, meaning <span class="math math-inline"><!----><span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msup><mi>v</mi><mi mathvariant="normal">⊤</mi></msup><mi mathvariant="normal">Σ</mi><mi>v</mi><mo>≥</mo><mn>0</mn></mrow><annotation encoding="application/x-tex">v^\top \Sigma v \ge 0</annotation></semantics></math></span><!----></span> for any <span class="math math-inline"><!----><span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>v</mi></mrow><annotation encoding="application/x-tex">v</annotation></semantics></math></span><!----></span>. Why? Because <span class="math math-inline"><!----><span class="katex"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msup><mi>v</mi><mi mathvariant="normal">⊤</mi></msup><mi mathvariant="normal">Σ</mi><mi>v</mi><mo>=</mo><mtext>Var</mtext><mo stretchy="false">(</mo><msup><mi>v</mi><mi mathvariant="normal">⊤</mi></msup><mi>X</mi><mo stretchy="false">)</mo><mo>≥</mo><mn>0</mn></mrow><annotation encoding="application/x-tex">v^\top \Sigma v = \text{Var}(v^\top X) \ge 0</annotation></semantics></math></span><!----></span>.</li></ul> <p>Fun fact, the eigenvectors of a symmetric matrix are orthogonal!</p> <h2>Eigen stuff</h2> <p>Observe</p> <p>Eigenvalue stuff</p><!----><!----></div></div><!----><!--]--> <!--[!--><!--]--><!--]-->
 			
 			<script>
 				{
-					__sveltekit_4fzq54 = {
+					__sveltekit_1vcvvzu = {
 						base: new URL("..", location).pathname.slice(0, -1)
 					};
 
 					const element = document.currentScript.parentElement;
 
 					Promise.all([
-						import("../_app/immutable/entry/start.C9-ypR25.js"),
-						import("../_app/immutable/entry/app.DTrSqSXV.js")
+						import("../_app/immutable/entry/start.BWpdkTly.js"),
+						import("../_app/immutable/entry/app.DhI3FvNA.js")
 					]).then(([kit, app]) => {
 						kit.start(app, element, {
-							node_ids: [0, 12],
+							node_ids: [0, 13],
 							data: [null,null],
 							form: null,
 							error: null

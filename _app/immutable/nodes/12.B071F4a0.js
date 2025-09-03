@@ -1,1 +1,0 @@
-import{t,a as r}from"../chunks/DKJMLC42.js";import"../chunks/BntcpoEZ.js";import{n as e}from"../chunks/BuAUvOro.js";var o=t("<p>Covariance matrix properties</p> <p>Eigenvalue stuff</p>",1);function f(a){var p=o();e(2),r(a,p)}export{f as component};
