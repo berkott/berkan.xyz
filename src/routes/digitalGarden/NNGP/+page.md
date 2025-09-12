@@ -60,6 +60,8 @@ This is kinda ugly and IDK what to do with it. The [limitations of kernels](/dig
     Here's KRR with the one hidden layer ReLU NNGP and and train a one hidden layer ReLU NN to learn <Math latex={String.raw`f^*(x) = x^2 + 2`}/> with various numbers of training data points. All NNs trained to convergence. Weight decay in AdamW changes things, here I used 1e-6. Also, <Math latex={String.raw`\sigma_w = \sigma_b = 1`}/>.
 
     ![NNGP inductive bias](/images/digitalGarden/NNGPInductiveBias.png "NNGP inductive bias")
+
+    TODO: Push python simulation code repo to github as well and link it on the digital garden home page.
 </details>
 
 # Signal propagation

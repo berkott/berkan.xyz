@@ -18,7 +18,10 @@ $$
 
 From here, you just do the standard conditioning a joint Gaussian stuff ([Wikipedia page for this](https://en.wikipedia.org/wiki/Multivariate_normal_distribution#Bayesian_inference:~:text=Conditional%20distributions)). Then you can write this as a new GP. This is your posterior predictive. 
 
-You can place a GP prior over functions and then compute the posterior after seeing data to have some probability distribution for what the rest of the functin looks like. This is what they call Gaussian process regression. They get these cool visualizations from it like this from on [scikit-learn](https://scikit-learn.org/stable/modules/gaussian_process.html).
+You can place a GP prior over functions and then compute the posterior after seeing data to have some probability distribution for what the rest of the functin looks like. This is what they call Gaussian process regression. They get these cool visualizations from it like this from on [scikit-learn](https://scikit-learn.org/stable/modules/gaussian_process.html) (this one uses the `ConstantKernel(1.0, constant_value_bounds="fixed") * RBF(1.0, length_scale_bounds="fixed")` kernel).
+
+![Linear kernel GPR](/images/digitalGarden/linearKernelGPR.png "Linear kernel GPR")
+
 ![Cool GP Regression](/images/digitalGarden/coolGPReg.png "Cool GP Regression")
 
 But also, the argmax sample from the posterior predictive corresponds to the kernel ridge regression solution,
