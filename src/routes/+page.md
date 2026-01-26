@@ -26,7 +26,7 @@ In my private life, I love family, friends, staying healthy, gardening, water po
 # Background
 
 ## PhD
-- PhD student at The University of Pennsylvania. Grateful to be advised by [Surbhi Goel](https://www.surbhigoel.com/).
+- PhD student at The University of Pennsylvania. Grateful to be advised by [Surbhi Goel](https://www.surbhigoel.com/) and supported by the NSF GRFP.
 - Interning with [James Simon](https://james-simon.github.io/) at [Imbue](https://imbue.com/).
 - Data scientist intern at [Hawaii Farming](https://www.hawaiifarming.com/).
 

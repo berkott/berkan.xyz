@@ -13,6 +13,10 @@ This section is based on the pareto frontier of models of deep learning from [Ja
 ![Pareto frontier](/images/digitalGarden/paretoFrontier.png "Pareto Frontier")
 - Linear regression
 - Kernel regression
+  - Eigenframework
+- Random feature models
+  - Rahimi and Recht 2007 paper
+  - Dimension-free deterministic equivalents and scaling laws for random feature regression
 - NNGP / NTK
   - [Deep Neural Networks as Gaussian Processes notes](/digitalGarden/NNGP)
   - [Limitations of kerenels notes](/digitalGarden/kernelLimitations)
@@ -67,6 +71,14 @@ This section is based on the pareto frontier of models of deep learning from [Ja
 - Other tricks
   - ADDING GRADIENT NOISE IMPROVES LEARNING FOR VERY DEEP NETWORKS
 
+## Imitation learning
+- [Classical learning theory with autoregressive models](/digitalGarden/autoRegCLT)
+- Black box theoretical studies
+  - Computational-Statistical Tradeoffs at the Next-Token Prediction Barrier: Autoregressive and Imitation Learning under Misspecification
+  - Is Best-of-N the Best of Them? Coverage, Scaling, and Optimality in Inference-Time Alignment
+  - Taming Imperfect Process Verifiers: A Sampling Perspective on Backtracking
+  - On the Query Complexity of Verifier-Assisted Language Generation
+
 ## Data
 - Pre-training data distribution
 - Post-training data distribution
@@ -79,7 +91,7 @@ This section is based on the pareto frontier of models of deep learning from [Ja
 - The Polar Express: Optimal Matrix Sign Methods and Their Application to the Muon Algorithm
 
 ## Distillation
-- Idk
+- 
 
 ## Post-training
 
