@@ -51,6 +51,7 @@
   </button>
   
   {#if isDescriptionExpanded}
+  <!-- TODO: Make this a blockquote!!!! -->
     <div class="mt-2 pl-2 pr-2 border-l-2 border-olive ml-4 bg-light-olive">
       <slot></slot>
     </div>
