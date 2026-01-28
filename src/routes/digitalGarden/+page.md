@@ -5,6 +5,8 @@ Welcome to my [digital garden](https://joelhooks.com/digital-garden/)! It is a g
 - [State of AI](https://www.stateof.ai/)
 - [ImageNet classes](https://deeplearning.cms.waikato.ac.nz/user-guide/class-maps/IMAGENET/)
 - [AI Safety](/digitalGarden/aiSafety)
+- [Mech Interp](/digitalGarden/mechInterp)
+- [Unlearning](/digitalGarden/unlearning)
 
 # Math
 - [Gaussians](/digitalGarden/gaussians)

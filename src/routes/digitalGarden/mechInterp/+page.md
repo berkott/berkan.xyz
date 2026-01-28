@@ -1,0 +1,2 @@
+# Sparse autoencoders and dictionary learning
+Sparse autoencoders are just overcomplete autoencoders (typically shallow MLPs) trained after the activation function of say a transformer MLP with an activation sparsity penalty on the "bottleneck" activations. It is like dictionary learning (also unsupervised of course) with amortized inference, cause you don't have to solve the optimization problem of with some fixed dictionary finding the optimal sparse code for it. Pretty cool. 
