@@ -4,20 +4,21 @@ Welcome to my [digital garden](https://joelhooks.com/digital-garden/)! It is a g
 - [Deep learning theory](/digitalGarden/deepLearningTheory)
 - [State of AI](https://www.stateof.ai/)
 - [ImageNet classes](https://deeplearning.cms.waikato.ac.nz/user-guide/class-maps/IMAGENET/)
-- [AI Safety](/digitalGarden/aiSafety)
-- [Mech Interp](/digitalGarden/mechInterp)
+- [AI safety](/digitalGarden/aiSafety)
+- [Mech interp](/digitalGarden/mechInterp)
 - [Unlearning](/digitalGarden/unlearning)
 
 # Math
 - [Gaussians](/digitalGarden/gaussians)
-- [Gaussian Processes](/digitalGarden/gaussianProcesses)
-- [Bayesian Stuff](/digitalGarden/bayesianStuff)
+- [Gaussian processes](/digitalGarden/gaussianProcesses)
+- [Bayesian stuff](/digitalGarden/bayesianStuff)
 
 # Programming
 - [Git guide](http://rogerdudler.github.io/git-guide/)
 - [LaTeX reference](https://alozano.clas.uconn.edu/wp-content/uploads/sites/490/2020/08/latexcheatsheet.pdf)
 
 # Other
+- [AI slop](/digitalGarden/aiSlop)
 - [Taking knowledge work seriously](https://notes.andymatuschak.org/zMbCwoVdjsqPNyTRRr3phPN)
 
 TODO: Make internal links a different color from external links.

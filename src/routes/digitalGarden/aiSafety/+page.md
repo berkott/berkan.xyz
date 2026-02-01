@@ -26,3 +26,7 @@ Why do they say "easily and provably solved by a human"? What does easily mean h
 Ok but other AIs can also solve these problems. They say nothing special about the humans or AIs, only that agents that are safe and trusted can't solve these self-referential problems, and any competent agent that isn't the agent being referred to can solve it.
 
 Could this limitation be used anywhere? When would we even care about safety on a self-referential problem? When would self-referential problems even show up? Maybe API calls and coding with the AI itself? Issues with planning graphs? But would these kinds of weird halting like algorithms show up practically?
+
+# Some forecasts
+
+[Ajeya 2026](https://www.planned-obsolescence.org/p/ai-predictions-for-2026)
