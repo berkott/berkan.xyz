@@ -27,6 +27,29 @@ Ok but other AIs can also solve these problems. They say nothing special about t
 
 Could this limitation be used anywhere? When would we even care about safety on a self-referential problem? When would self-referential problems even show up? Maybe API calls and coding with the AI itself? Issues with planning graphs? But would these kinds of weird halting like algorithms show up practically?
 
+# Other papers 
+
+https://arxiv.org/pdf/2605.01643 Cool model for scalable oversight
+
+https://arxiv.org/pdf/2604.10290 kinda cool ai orgs
+
+might be useful in the future: https://arxiv.org/pdf/2604.10290
+
+Kinda cool: https://arxiv.org/pdf/2604.24936
+
+Woah, understanding generalization: https://arxiv.org/pdf/2605.02087
+
+May be overshooting: PolymathMinds AI Lab https://arxiv.org/pdf/2605.01771
+
+Really cool personas and values: https://arxiv.org/pdf/2408.09049?, https://arxiv.org/pdf/2502.08640
+
+https://arxiv.org/pdf/2506.06278 might connnect to unlearning from subliminal learning
+
+CoT controllability: https://arxiv.org/pdf/2603.05706
+
+Deep ignorance: https://arxiv.org/pdf/2508.06601
+
+
 # Some forecasts
 
 [Ajeya 2026](https://www.planned-obsolescence.org/p/ai-predictions-for-2026)

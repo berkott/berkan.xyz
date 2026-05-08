@@ -19,6 +19,7 @@ Welcome to my [digital garden](https://joelhooks.com/digital-garden/)! It is a g
 
 # Other
 - [AI slop](/digitalGarden/aiSlop)
+- [Life lessons](/digitalGarden/phdLessons)
 - [Taking knowledge work seriously](https://notes.andymatuschak.org/zMbCwoVdjsqPNyTRRr3phPN)
 
 TODO: Make internal links a different color from external links.

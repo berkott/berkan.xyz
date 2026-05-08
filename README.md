@@ -2,8 +2,11 @@
 
 TODOs:
 - comments
+- RSS feed
 
 Future posts:
+- Understanding information theory basics of tokenizers, losses, and other things in llms
+- blog about backdoors
 - How I wrote this blog, including all the intricacies of svelte, markdown, and latex.
 - Blog post about how decisions are made, sage always smiles, just what most excited about in the moment
 - If im afraid to say smth definitive, write poetry or stories on my blog
