@@ -1,0 +1,1 @@
+import{t as e,a as o}from"../chunks/DKJMLC42.js";import"../chunks/BntcpoEZ.js";import{n as r}from"../chunks/BuAUvOro.js";var n=e('<h1>Not All Data Are Unlearned Equally</h1> <p><a href="https://arxiv.org/pdf/2504.05058" rel="nofollow">Paper link</a></p> <p>You need to take pre-training frequency into account!</p>',1);function m(a){var t=n();r(4),o(a,t)}export{m as component};
