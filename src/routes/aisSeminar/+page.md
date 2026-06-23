@@ -29,7 +29,7 @@ Anyone excited to learn about AI safety is welcome — we ask only for some back
 | Jun 3 | *Canceled* | | |
 | Jun 10 | *Canceled* | | |
 | Jun 17 | [Chloe Li](https://chloeli.org/) | Anthropic Alignment Fellow | [Model spec midtraining](https://arxiv.org/abs/2605.02087) |
-| Jun 24 | TBD | | |
+| Jun 24 | *Canceled* | | |
 | Jul 1 | [Daniel Tan](https://dtch1997.github.io/) | Arcadia Alignment (UK AISI) | Emergent misalignment & model motivations |
 | Jul 8 | *Skipping — ICML* | | |
 | Jul 15 | [Peter Hase](https://peterbhase.github.io/) | Schmidt Sciences / Stanford | Interpretability & controllability |

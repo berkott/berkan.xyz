@@ -3,7 +3,9 @@
 
 - Deadlines can create useful pressure for me.
 
-- I should maximize information gain with experiments and the research questions I ask.
+- I should maximize information gain / importance with experiments and the research questions I ask.
+
+- Thoroughly read and understand related literature.
 
 - Consider pre-registering kill criteria for projects.
 
