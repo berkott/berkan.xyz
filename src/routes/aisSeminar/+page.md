@@ -52,9 +52,27 @@ Emerging technologies are always hard to govern, especially when their onset is 
     display: table;
     width: 100%;
     table-layout: fixed;
+    border-collapse: collapse;
+    margin-top: 1em;
+    margin-bottom: 1.25em;
+    font-size: 0.95rem;
+    line-height: 1.4;
   }
   th, td {
+    border: 1px solid rgba(98, 111, 71, 0.25);
+    padding: 0.45em 0.75em;
+    text-align: left;
+    vertical-align: top;
+    color: var(--color-dark-gray);
     overflow-wrap: break-word;
+  }
+  th {
+    background-color: var(--color-light-olive);
+    font-weight: 700;
+    border-bottom: 2px solid var(--color-olive);
+  }
+  tbody tr:nth-child(even) {
+    background-color: rgba(236, 231, 209, 0.4);
   }
   th:nth-child(1), td:nth-child(1) { width: 14%; }  /* Date */
   th:nth-child(2), td:nth-child(2) { width: 24%; }  /* Speaker */
