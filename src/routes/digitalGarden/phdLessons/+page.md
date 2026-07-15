@@ -8,8 +8,7 @@ General tips:
 - Write like Lawrence Saul (use the folder and CLAUDE.md).
 
 I wanna get better at thinking and doing research and here's how I'm going to try to do so. 
-- Pay attention to the strength of arguments and the argument structure. Are they deductive claims? Do they withstand argumentation? Are assumptions justified?
-- Deduction, induction, abduction. Deduction is just pushing facts, induction is generalizing, and abduction is expanding the hypothesis space. Claude gave a good example:
+- Pay attention to the strength of arguments and the argument structure. Are they soely deductive claims? Do they withstand argumentation? Are assumptions justified? Reminder, Deduction, induction, abduction. Deduction is just pushing facts, induction is generalizing, and abduction is expanding the hypothesis space. Claude gave a good example:
   - Deduction. Rule: all beans from this bag are white. Case: these beans are from this bag. ∴ Result: these beans are white.
   - Induction. Case: these beans are from this bag. Result: these beans are white. ∴ Rule: all beans from this bag are white.
   - Abduction. Rule: all beans from this bag are white. Result: these beans are white. ∴ Case: these beans are from this bag.
