@@ -17,5 +17,6 @@ I wanna get better at thinking and doing research and here's how I'm going to tr
   - Look at a paper problem statement and abstract and predict what their central thread and main results are
   - Cleanly break papers down into individual argument steps and reconstruct the paper from just those steps
   - Ask for feedback on my ideas and experiments often and before everything is finished.
+  - Make connections between papers
 - Goal directed research a la John Schulman
 - Take ownership and turn they into we. I thought they were thinking about xyz problem... No, it's we!
