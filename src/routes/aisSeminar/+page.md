@@ -34,7 +34,7 @@ Anyone excited to learn about AI safety is welcome — we ask only for some back
 | Jul 8 | *Skipping — ICML* | | |
 | Jul 15 | [Peter Hase](https://peterbhase.github.io/) | Schmidt Sciences / Stanford | [Blackbox and Whitebox Monitoring](#hase-jul15) |
 | Jul 22 | [Meena Jagadeesan](https://mjagadeesan.github.io/) | UC Berkeley (incoming UPenn) | [Anticipating Risks in LLM Ecosystems](#jagadeesan-jul22) |
-| Jul 29 | [Matan Shtepel](https://matanshtepel.com/) | CMU | AI safety |
+| Jul 29 | [Matan Shtepel](https://matanshtepel.com/) | CMU | [Evaluating and Improving Monitorability Evaluations](#shtepel-jul29) |
 | Aug 5 | [Stephen Casper](https://stephencasper.com/) | Harvard (Berkman Klein) | [AI Governance in 2026](#casper-aug5) |
 
 ## Talk details
@@ -46,6 +46,16 @@ AI models often learn problematic reasoning processes due to misspecified traini
 <h3 id="jagadeesan-jul22">Meena Jagadeesan — Anticipating Risks in LLM Ecosystems (Jul 22)</h3>
 
 As LLMs are deployed at scale, these models interact with humans, other models, and model-providers in a broader ecosystem. However, classical evaluation practices fail to capture ecosystem-level risks, and past observations may not predict the future since the structure of these ecosystems is rapidly evolving. This talk will investigate how multi-agent interactions shape ecosystem-level risks, and how to anticipate these risks before they emerge. I will focus on three case studies from my work: model-provider competition inducing non-monotone scaling trends (NeurIPS 2023), test-time feedback loops leading to reward hacking (ICML 2024), and human-AI interactions disrupting collusion (arXiv 2025). For each case study, I will reflect on which of our assumptions about ecosystem structure hold up in today's deployments.
+
+<h3 id="shtepel-jul29">Matan Shtepel — Evaluating and Improving Monitorability Evaluations (Jul 29)</h3>
+
+Automatically monitoring AIs for misbehavior is critical to preventing real-world harm such as the recent OpenAI-HuggingFace incident. To improve our ability to monitor AIs, we must be able to evaluate how reliably different methods can flag misbehavior.
+
+In this talk, we formalize monitorability and monitorability evaluations and identify two key issues: (1) Monitorability evaluations hinge on many implementation level decisions which are made inconsistently across works. (2) The prompting techniques used in current monitorability evaluations may be too weak to fully elicit AIs ability to evade monitors.
+
+For (1), we show that current monitorability evaluations are not robust to variation in implementation level decisions (at the scale of prior work), and (2) develop a new reward-shaping, RL-based elicitation for monitorability which outperforms the state of the art.
+
+We remain optimistic monitorability evaluations can be made more trustworthy, but conclude that they are currently not reliable measurements of monitorability in the wild.
 
 <h3 id="casper-aug5">Stephen Casper — AI Governance in 2026 (Aug 5)</h3>
 
