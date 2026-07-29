@@ -36,6 +36,7 @@ Anyone excited to learn about AI safety is welcome — we ask only for some back
 | Jul 22 | [Meena Jagadeesan](https://mjagadeesan.github.io/) | UC Berkeley (incoming UPenn) | [Anticipating Risks in LLM Ecosystems](#jagadeesan-jul22) |
 | Jul 29 | [Matan Shtepel](https://matanshtepel.com/) | CMU | [Evaluating and Improving Monitorability Evaluations](#shtepel-jul29) |
 | Aug 5 | [Stephen Casper](https://stephencasper.com/) | Harvard (Berkman Klein) | [AI Governance in 2026](#casper-aug5) |
+| Aug 12 | [Rico Angell](https://rangell.github.io) | NYU | Estimating tail risks in language model outputs |
 
 ## Talk details
 
