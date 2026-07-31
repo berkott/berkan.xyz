@@ -19,3 +19,21 @@ I wanna get better at thinking and doing research and here's how I'm going to tr
   - Make connections between papers
 - Goal directed research a la John Schulman
 - Take ownership and turn they into we. I thought they were thinking about xyz problem... No, it's we!
+
+Researchers who have developed good taste find clever and elegant approaches, and find themselves pulled toward solutions that feel "right" before they can fully articulate why. At a macro scale, they pick problems that will matter; at a micro scale, they take approaches likely to succeed. And perhaps most importantly, they make these decisions early, before wasting months of effort.
+
+But if I had to summarize it in one sentence, it would be that taste comes from practicing the skill of research, keeping your focus always on identifying what works and what doesn't.
+
+Once you've read everything, the second step is to forget it all.
+
+Hamming was famous for asking "what's the most important problem in your field, and why aren't you working on it?" Approach your research with this mindset. One excellent paper is worth a thousand mediocre ones, and takes less time to write.
+
+So the magnitude of your contribution is judged, in a very real sense, by counting the months between when you publish, and when the next person would have. Try to pick something that would have taken at least a few months for someone else to do as well as you did
+
+Knowing what I'm looking for by going off rigorous falsifiable hypotheses as I'm doing my search as much as I can
+
+https://nicholas.carlini.com/writing/2026/how-to-win-a-best-paper-award.html
+
+https://colah.github.io/notes/taste/
+
+Make it concrete! When pitching an idea what's a specific experiment I could do / theorem I could prove to verify it?
