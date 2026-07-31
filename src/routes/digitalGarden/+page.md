@@ -7,6 +7,7 @@ Welcome to my [digital garden](https://joelhooks.com/digital-garden/)! It is a g
 - [AI safety](/digitalGarden/aiSafety)
 - [Mech interp](/digitalGarden/mechInterp)
 - [Unlearning](/digitalGarden/unlearning)
+- [The Opus 5 "---" separator, measured](/digitalGarden/dashesJailbreak)
 
 # Math
 - [Gaussians](/digitalGarden/gaussians)
