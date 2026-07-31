@@ -1,0 +1,1 @@
+import{t,a as e}from"../chunks/DKJMLC42.js";import{c as p,r as i}from"../chunks/BuAUvOro.js";import{s as d}from"../chunks/DhGDfn95.js";var m=t('<div class="dashes-post"><!></div>');function l(o,r){var a=m(),s=p(a);d(s,()=>r.children),i(a),e(o,a)}export{l as component};
