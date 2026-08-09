@@ -36,7 +36,7 @@ Anyone excited to learn about AI safety is welcome — we ask only for some back
 | Jul 22 | [Meena Jagadeesan](https://mjagadeesan.github.io/) | UC Berkeley (incoming UPenn) | [Anticipating Risks in LLM Ecosystems](#jagadeesan-jul22) |
 | Jul 29 | [Matan Shtepel](https://matanshtepel.com/) | CMU | [Evaluating and Improving Monitorability Evaluations](#shtepel-jul29) |
 | Aug 5 | [Stephen Casper](https://stephencasper.com/) | Harvard (Berkman Klein) | [AI Governance in 2026](#casper-aug5) |
-| Aug 12 | [Rico Angell](https://rangell.github.io) | NYU | Estimating tail risks in language model outputs |
+| Aug 12 | [Rico Angell](https://rangell.github.io) | NYU | [Estimating Tail Risks of Language Models](#angell-aug12) |
 
 ## Talk details
 
@@ -63,6 +63,10 @@ We remain optimistic monitorability evaluations can be made more trustworthy, bu
 *What's going on, why it's a mess, and why it's going to get messier.*
 
 Emerging technologies are always hard to govern, especially when their onset is crammed into a few intense years. With AI, policymakers, thus far, have produced more case studies in failure than success. This talk will overview the stages of governing emerging tech, the challenges that are arising, and the diverse policy strategies that governments across the world are taking. Finally, we will speculate about how things may change in the next few years and how governments will need to adapt. We will speculate about how Xi Jinping, Elon Musk, Sam Altman, Jensen Huang, Bernie Sanders, and anonymous hackers may all have the potential power to "blow it up" and usher in the next messy chapter of AI governance.
+
+<h3 id="angell-aug12">Rico Angell — Estimating Tail Risks of Language Models (Aug 12)</h3>
+
+Language models are increasingly capable and are being rapidly deployed on a population-level scale. As a result, the safety of these models is increasingly high-stakes. Fortunately, advances in alignment have significantly reduced the likelihood of harmful model outputs. However, when models are queried billions of times in a day, even rare worst-case behaviors will occur. Current safety evaluations focus on capturing the distribution of inputs that yield harmful outputs. These evaluations disregard the probabilistic nature of models and their tail output behavior. To measure this tail risk, we propose a method to efficiently estimate the probability of harmful outputs for any input query. Instead of naive brute-force sampling from the target model, where harmful outputs could be rare, we operationalize importance sampling by creating unsafe versions of the target model. These unsafe versions enable sample-efficient estimation by making harmful outputs more probable. On benchmarks measuring misuse and misalignment, these estimates match brute-force Monte Carlo estimates using orders of magnitude fewer samples. Additionally, we find that these harmfulness estimates can reveal the sensitivity of models to perturbations in model input and predict deployment risks. This work demonstrates that accurate rare-event estimation is both critical and feasible for safety evaluations.
 
 <p class="mt-10 text-sm text-gray">Inspired by the formatting of the <a href="https://jasonaltschuler.github.io/folds-seminar/">FOLDS Seminar</a>.</p>
 
