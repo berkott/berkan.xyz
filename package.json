@@ -4,6 +4,8 @@
 	"version": "1.0.0",
 	"type": "module",
 	"scripts": {
+		"fetch:prices": "node scripts/fetch_prices.mjs",
+		"predev": "npm run fetch:prices",
 		"dev": "vite dev",
 		"build": "vite build",
 		"preview": "vite preview",
