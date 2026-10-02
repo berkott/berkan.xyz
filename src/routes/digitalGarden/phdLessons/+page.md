@@ -3,9 +3,18 @@
 General tips:
 - Write a bullet point outline of the paper early on and fill in formal artifacts and key plots quickly.
 - Deadlines can create useful pressure for me.
-- I should maximize information gain / importance with experiments and the research questions I ask.
+- I should maximize information gain / importance / chance to kill the project with experiments and the research questions I ask.
 - Thoroughly read and understand related literature.
 - Write like Lawrence Saul (use the folder and CLAUDE.md).
+
+Producing research that Matters:
+1. Talk to the consumers of your research before the results exist.
+2. Write the theory of change early on.
+3. Don't make projects bigger than they need to be and do a few things well
+4. Maybe try shipping intermediate artifacts publicly
+5. Last mile delivery
+
+Work on important problems, where "important" means consequential and you have a reasonable attack. Keep a running list of 10–20 such problems and pounce when a new idea gives you a way in. Regularly set aside time to ask what the important problems are, and if your beliefs and your daily work point in different directions, change one of them. Stay exposed to the best people you can find, mostly through one-on-one conversations about half-formed ideas with people who push back rather than just agree, and use those conversations and your reading to learn what the problems are, not to borrow solutions. Commit deeply, spend serious time selling the work, and don't make excuses to yourself.
 
 I wanna get better at thinking and doing research and here's how I'm going to try to do so. 
 - Pay attention to the strength of arguments and the argument structure. Are they soely deductive claims? Do they withstand argumentation? Are assumptions justified? Reminder, Deduction, induction, abduction. Deduction is just pushing facts, induction is generalizing, and abduction is expanding the hypothesis space. Claude gave a good example:
